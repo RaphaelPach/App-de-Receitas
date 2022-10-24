@@ -28,6 +28,12 @@ function Provider({ children }) {
     verifyBtn();
   }, [email, passWord, verifyBtn]);
 
+  const handleClickSubmit = () => {
+    const user = { email };
+    localStorage.setItem('user', JSON.stringify(user));
+    console.log(user);
+  };
+
   const contexto = useMemo(() => ({
     email,
     passWord,
@@ -35,6 +41,7 @@ function Provider({ children }) {
     verifEmail,
     verifPassWord,
     verifyBtn,
+    handleClickSubmit,
 
   }), [email, passWord, verifPassWord, verifEmail, verifyBtn, disabled]);
   return (
