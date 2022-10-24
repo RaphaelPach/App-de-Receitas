@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useMemo, useState, useCallback, useEffect } from 'react';
+import { useMemo, useState, useCallback, useEffect, history } from 'react';
 import AppContext from './AppContext';
 
 function Provider({ children }) {
@@ -31,7 +31,7 @@ function Provider({ children }) {
   const handleClickSubmit = () => {
     const user = { email };
     localStorage.setItem('user', JSON.stringify(user));
-    console.log(user);
+    history.push('/meals');
   };
 
   const contexto = useMemo(() => ({
@@ -53,6 +53,7 @@ function Provider({ children }) {
 
 Provider.propTypes = {
   children: PropTypes.node,
+  history: PropTypes.objectOf.isRequired,
 }.isRequired;
 
 export default Provider;
