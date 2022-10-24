@@ -6,7 +6,8 @@ function Login() {
     passWord,
     verifEmail,
     verifPassWord,
-    disabled } = useContext(AppContext);
+    disabled, handleClickSubmit } = useContext(AppContext);
+
   return (
     <div>
       <label htmlFor="email">
@@ -37,6 +38,7 @@ function Login() {
         type="button"
         disabled={ disabled }
         data-testid="login-submit-btn"
+        onClick={ handleClickSubmit }
       >
         ENTRAR
       </button>
