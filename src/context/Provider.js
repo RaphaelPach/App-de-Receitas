@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useMemo, useState, useCallback, useEffect, history } from 'react';
+import { useMemo, useState, useCallback, useEffect } from 'react';
 import AppContext from './AppContext';
 
 function Provider({ children }) {
@@ -28,11 +28,10 @@ function Provider({ children }) {
     verifyBtn();
   }, [email, passWord, verifyBtn]);
 
-  const handleClickSubmit = () => {
+  const handleClickSubmit = useCallback(() => {
     const user = { email };
     localStorage.setItem('user', JSON.stringify(user));
-    history.push('/meals');
-  };
+  }, [email]);
 
   const contexto = useMemo(() => ({
     email,
@@ -43,7 +42,13 @@ function Provider({ children }) {
     verifyBtn,
     handleClickSubmit,
 
-  }), [email, passWord, verifPassWord, verifEmail, verifyBtn, disabled]);
+  }), [email,
+    passWord,
+    verifPassWord,
+    verifEmail,
+    verifyBtn,
+    disabled,
+    handleClickSubmit]);
   return (
     <AppContext.Provider value={ contexto }>
       { children }
