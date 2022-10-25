@@ -12,16 +12,14 @@ import FavoriteRecipes from './components/FavoriteRecipes';
 function App() {
   return (
     <Provider>
-      <BrowserRouter>
-        <Switch>
-          <Route exact path="/" component={ Login } />
-          <Route path="/meals" component={ Meals } />
-          <Route exact path="/done-recipes" component={ DoneRecipes } />
-          <Route exact path="/drinks" component={ Drinks } />
-          <Route exact path="/profile" component={ Profile } />
-          <Route exact path="/favorite-recipes" component={ FavoriteRecipes } />
-        </Switch>
-      </BrowserRouter>
+      <Switch>
+        <Route exact path="/" component={ Login } />
+        <Route path="/meals" component={ Meals } />
+        <Route exact path="/done-recipes" component={ DoneRecipes } />
+        <Route exact path="/drinks" component={ Drinks } />
+        <Route exact path="/profile" component={ Profile } />
+        <Route exact path="/favorite-recipes" component={ FavoriteRecipes } />
+      </Switch>
     </Provider>
   );
 }
