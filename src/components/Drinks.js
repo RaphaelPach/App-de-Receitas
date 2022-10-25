@@ -1,10 +1,10 @@
 import React from 'react';
 import Header from './Header';
 
-export default function Drinks() {
+export default function Drinks(props) {
   return (
     <div>
-      <Header title="Drinks" profile search />
+      <Header { ...props } title="Drinks" profile search />
     </div>
   );
 }

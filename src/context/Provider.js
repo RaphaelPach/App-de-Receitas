@@ -37,10 +37,28 @@ function Provider({ children }) {
   };
 
   const getFoodByFirstLetter = async (primeiraLetra) => {
-    const responseLetter = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${primeiraLetra}`);
+    const responseLetter = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?f=${primeiraLetra}`);
     const { meals } = await responseLetter.json();
     console.log('log', meals);
     return meals;
+  };
+  const getDrinks = async (ingrediente) => {
+    const responseDrink = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${ingrediente}`);
+    const { drinks } = await responseDrink.json();
+    console.log('log', drinks);
+    return drinks;
+  };
+  const getDrinksByName = async (nome) => {
+    const responseDrinkByName = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${nome}`);
+    const { drinks } = await responseDrinkByName.json();
+    console.log('log', drinks);
+    return drinks;
+  };
+  const getDrinksByFirstLetter = async (primeiraLetra) => {
+    const responseDrinkByFirstLetter = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/search.php?f=${primeiraLetra}`);
+    const { drinks } = await responseDrinkByFirstLetter.json();
+    console.log('log', drinks);
+    return drinks;
   };
   useEffect(() => {
     verifyBtn();
@@ -62,6 +80,9 @@ function Provider({ children }) {
     getFoodByIngredient,
     getFoodByName,
     getFoodByFirstLetter,
+    getDrinks,
+    getDrinksByName,
+    getDrinksByFirstLetter,
 
   }), [email,
     passWord,

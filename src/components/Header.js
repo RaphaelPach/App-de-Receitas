@@ -29,7 +29,7 @@ function Header(props) {
           />
         </button>
       )}
-      { isSearching && <SearchBar /> }
+      { isSearching && <SearchBar { ...props } /> }
     </header>
   );
 }
