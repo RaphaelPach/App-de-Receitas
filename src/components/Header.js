@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import profileIcon from '../images/profileIcon.svg';
 import searchIcon from '../images/searchIcon.svg';
+import SearchBar from './SearchBar';
 
 function Header(props) {
   const { title, profile, search } = props;
@@ -28,11 +29,7 @@ function Header(props) {
           />
         </button>
       )}
-      { isSearching && <input
-        type="text"
-        placeholder="pesquisar"
-        data-testid="search-input"
-      /> }
+      { isSearching && <SearchBar /> }
     </header>
   );
 }
