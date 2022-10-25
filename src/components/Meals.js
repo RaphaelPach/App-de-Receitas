@@ -1,9 +1,9 @@
 import React from 'react';
-// import AppContext from '../context/AppContext';
+import Header from './Header';
 
 function Recipes() {
   return (
-    <h1>receitas</h1>
+    <Header title="Meals" search profile />
   );
 }
 
