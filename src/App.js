@@ -3,17 +3,25 @@ import { Route, Switch } from 'react-router-dom';
 import './App.css';
 import Login from './components/Login';
 import Meals from './components/Meals';
-/* import rockGlass from './images/rockGlass.svg'; */
-/* import 'bootstrap/dist/css/bootstrap.min.css'; */
 import Provider from './context/Provider';
+import Drinks from './components/Drinks';
+import DoneRecipes from './components/DoneRecipes';
+import Profile from './components/Profile';
+import FavoriteRecipes from './components/FavoriteRecipes';
 
 function App() {
   return (
     <Provider>
-      <Switch>
-        <Route exact path="/" component={ Login } />
-        <Route path="/meals" component={ Meals } />
-      </Switch>
+      <BrowserRouter>
+        <Switch>
+          <Route exact path="/" component={ Login } />
+          <Route path="/meals" component={ Meals } />
+          <Route exact path="/done-recipes" component={ DoneRecipes } />
+          <Route exact path="/drinks" component={ Drinks } />
+          <Route exact path="/profile" component={ Profile } />
+          <Route exact path="/favorite-recipes" component={ FavoriteRecipes } />
+        </Switch>
+      </BrowserRouter>
     </Provider>
   );
 }
