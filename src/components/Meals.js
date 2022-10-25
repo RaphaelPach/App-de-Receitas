@@ -1,9 +1,9 @@
 import React from 'react';
 import Header from './Header';
 
-function Recipes() {
+function Recipes(props) {
   return (
-    <Header title="Meals" search profile />
+    <Header { ...props } title="Meals" search profile />
   );
 }
 

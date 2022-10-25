@@ -39,3 +39,30 @@ describe('Testando Header', () => {
     expect(searchInput).toBeInTheDocument();
   });
 });
+
+describe('Testando SearchBar', () => {
+  it('Testando Funcionamento do SearchBar', async () => {
+    const { history } = renderWithRouter(<App />);
+
+    act(() => {
+      history.push('/meals');
+    });
+
+    const openSearchBar = screen.getByTestId('search-top-btn');
+    userEvent.click(openSearchBar);
+
+    /*  abriu searchBar */
+
+    const searchInput = screen.getByTestId('search-input');
+    const searchBtn = screen.getByTestId('exec-search-btn');
+    const ingredientFilter = screen.getByTestId('ingredient-search-radio');
+    const nameFilter = screen.getByTestId('name-search-radio');
+    const firstLetterFilter = screen.getByTestId('first-letter-search-radio');
+
+    expect(searchInput).toBeInTheDocument();
+    expect(searchBtn).toBeInTheDocument();
+    expect(ingredientFilter).toBeInTheDocument();
+    expect(nameFilter).toBeInTheDocument();
+    expect(firstLetterFilter).toBeInTheDocument();
+  });
+});

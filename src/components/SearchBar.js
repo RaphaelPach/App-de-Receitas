@@ -1,16 +1,22 @@
 import React, { useContext, useState } from 'react';
+import PropTypes from 'prop-types';
 import AppContext from '../context/AppContext';
 
-export default function SearchBar() {
+export default function SearchBar(props) {
+  const { history: { location: { pathname } } } = props;
+
   const {
     getFoodByIngredient,
     getFoodByName,
     getFoodByFirstLetter,
+    getDrinks,
+    getDrinksByName,
+    getDrinksByFirstLetter,
   } = useContext(AppContext);
   const [option, setOption] = useState('ingredient');
   const [search, setSearch] = useState('');
 
-  const handleSearch = () => {
+  const searchFood = () => {
     if (option === 'ingredient') {
       getFoodByIngredient(search);
     }
@@ -23,6 +29,25 @@ export default function SearchBar() {
     if (option === 'firstLetter') {
       if (search.length === 1) {
         getFoodByFirstLetter(search);
+      } else {
+        global.alert('Your search must have only 1 (one) character');
+      }
+    }
+  };
+
+  const searchDrink = () => {
+    if (option === 'ingredient') {
+      getDrinks(search);
+    }
+
+    if (option === 'name') {
+      getDrinksByName(search);
+      console.log('entrou em name');
+    }
+
+    if (option === 'firstLetter') {
+      if (search.length === 1) {
+        getDrinksByFirstLetter(search);
       } else {
         global.alert('Your search must have only 1 (one) character');
       }
@@ -77,7 +102,7 @@ export default function SearchBar() {
       </label>
 
       <button
-        onClick={ handleSearch }
+        onClick={ pathname === '/meals' ? searchFood : searchDrink }
         type="button"
         data-testid="exec-search-btn"
       >
@@ -87,3 +112,7 @@ export default function SearchBar() {
     </div>
   );
 }
+
+SearchBar.propTypes = {
+  history: PropTypes.shape().isRequired,
+};
