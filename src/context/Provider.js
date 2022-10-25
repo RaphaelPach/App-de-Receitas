@@ -23,7 +23,25 @@ function Provider({ children }) {
     setPassWord(target.value);
     /*  verifyBtn(); */
   }, []);
+  const getFoodByIngredient = async (ingrediente) => {
+    const response = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${ingrediente}`);
+    const { meals } = await response.json();
+    console.log('log', meals);
+    return meals;
+  };
+  const getFoodByName = async (nome) => {
+    const responseName = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${nome}`);
+    const { meals } = await responseName.json();
+    console.log('log', meals);
+    return meals;
+  };
 
+  const getFoodByFirstLetter = async (primeiraLetra) => {
+    const responseLetter = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${primeiraLetra}`);
+    const { meals } = await responseLetter.json();
+    console.log('log', meals);
+    return meals;
+  };
   useEffect(() => {
     verifyBtn();
   }, [email, passWord, verifyBtn]);
@@ -41,6 +59,9 @@ function Provider({ children }) {
     verifPassWord,
     verifyBtn,
     handleClickSubmit,
+    getFoodByIngredient,
+    getFoodByName,
+    getFoodByFirstLetter,
 
   }), [email,
     passWord,
