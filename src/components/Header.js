@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import profileIcon from '../images/profileIcon.svg';
@@ -35,5 +36,16 @@ function Header(props) {
     </header>
   );
 }
+
+Header.propTypes = {
+  profile: PropTypes.bool,
+  search: PropTypes.bool,
+  title: PropTypes.string.isRequired,
+};
+
+Header.defaultProps = {
+  profile: false,
+  search: false,
+};
 
 export default Header;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { screen } from '@testing-library/react';
+import { screen, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from '../App';
 import renderWithRouter from './services/renderWithRouter';
@@ -16,5 +16,26 @@ describe('Testando App de Receitas', () => {
     expect(password).toBeInTheDocument();
     userEvent.click(btn);
     /* await waitFor(() => expect(history.location.pathname).toBe('/meals'), { timeout: 3000 }); */
+  });
+});
+
+describe('Testando Header', () => {
+  it('Testando Funcionamento da tela de header', () => {
+    const { history } = renderWithRouter(<App />);
+    act(() => {
+      history.push('/meals');
+    });
+    const textMeals = screen.getByRole('heading', { name: /meals/i });
+    const searchBtn = screen.getByTestId('search-top-btn');
+    const profileBtn = screen.getByTestId('profile-top-btn');
+
+    expect(textMeals).toBeInTheDocument();
+    expect(profileBtn).toBeInTheDocument();
+    expect(searchBtn).toBeInTheDocument();
+
+    userEvent.click(searchBtn);
+
+    const searchInput = screen.getByTestId('search-input');
+    expect(searchInput).toBeInTheDocument();
   });
 });
