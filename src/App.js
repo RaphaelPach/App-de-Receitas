@@ -8,17 +8,21 @@ import Drinks from './components/Drinks';
 import DoneRecipes from './components/DoneRecipes';
 import Profile from './components/Profile';
 import FavoriteRecipes from './components/FavoriteRecipes';
+import MealsDetails from './components/MealsDetails';
+import DrinksDetails from './components/DrinksDetails';
 
 function App() {
   return (
     <Provider>
       <Switch>
         <Route exact path="/" component={ Login } />
-        <Route path="/meals" component={ Meals } />
+        <Route exact path="/meals" component={ Meals } />
         <Route exact path="/done-recipes" component={ DoneRecipes } />
         <Route exact path="/drinks" component={ Drinks } />
         <Route exact path="/profile" component={ Profile } />
         <Route exact path="/favorite-recipes" component={ FavoriteRecipes } />
+        <Route exact path="/meals/:id" component={ MealsDetails } />
+        <Route exact path="/drinks/:id" component={ DrinksDetails } />
       </Switch>
     </Provider>
   );

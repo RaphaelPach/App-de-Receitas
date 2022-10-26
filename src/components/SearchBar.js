@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import AppContext from '../context/AppContext';
 
@@ -12,9 +12,36 @@ export default function SearchBar(props) {
     getDrinks,
     getDrinksByName,
     getDrinksByFirstLetter,
+    foodList,
+    setFoodList,
+    drinkList,
+    setDrinkList,
   } = useContext(AppContext);
+
   const [option, setOption] = useState('ingredient');
   const [search, setSearch] = useState('');
+
+  useEffect(() => {
+
+  }, []);
+
+  useEffect(() => {
+    const { history } = props;
+    if (foodList?.length === 1) {
+      const id = foodList[0].idMeal;
+      history.push(`/meals/${id}`);
+      setFoodList([]);
+    }
+  }, [foodList, props, setFoodList]);
+
+  useEffect(() => {
+    const { history } = props;
+    if (drinkList?.length === 1) {
+      const id = drinkList[0].idDrink;
+      history.push(`/drinks/${id}`);
+      setDrinkList([]);
+    }
+  }, [drinkList, props, setDrinkList]);
 
   const searchFood = () => {
     if (option === 'ingredient') {
