@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import AppContext from '../context/AppContext';
 import Header from './Header';
 import ItemCard from './ItemCard';
+import Footer from './Footer';
 
 export default function Drinks(props) {
   const { drinkList } = useContext(AppContext);
@@ -19,6 +20,7 @@ export default function Drinks(props) {
           img={ e.strDrinkThumb }
         />))
       }
+      <Footer />
     </div>
   );
 }
