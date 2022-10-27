@@ -19,6 +19,8 @@ describe('Testando App de Receitas', () => {
   });
 });
 
+const searchInputConst = 'search-input';
+
 describe('Testando Header', () => {
   it('Testando Funcionamento da tela de header', () => {
     const { history } = renderWithRouter(<App />);
@@ -26,7 +28,7 @@ describe('Testando Header', () => {
       history.push('/meals');
     });
     const textMeals = screen.getByRole('heading', { name: /meals/i });
-    const searchBtn = screen.getByTestId('search-top-btn');
+    const searchBtn = screen.getByTestId(searchInputConst);
     const profileBtn = screen.getByTestId('profile-top-btn');
 
     expect(textMeals).toBeInTheDocument();
@@ -35,11 +37,10 @@ describe('Testando Header', () => {
 
     userEvent.click(searchBtn);
 
-    const searchInput = screen.getByTestId('search-input');
+    const searchInput = screen.getByTestId(searchInputConst);
     expect(searchInput).toBeInTheDocument();
   });
 });
-
 describe('Testando SearchBar', () => {
   it('Testando Funcionamento do SearchBar', async () => {
     const { history } = renderWithRouter(<App />);
@@ -53,7 +54,7 @@ describe('Testando SearchBar', () => {
 
     /*  abriu searchBar */
 
-    const searchInput = screen.getByTestId('search-input');
+    const searchInput = screen.getByTestId(searchInputConst);
     const searchBtn = screen.getByTestId('exec-search-btn');
     const ingredientFilter = screen.getByTestId('ingredient-search-radio');
     const nameFilter = screen.getByTestId('name-search-radio');
@@ -64,5 +65,52 @@ describe('Testando SearchBar', () => {
     expect(ingredientFilter).toBeInTheDocument();
     expect(nameFilter).toBeInTheDocument();
     expect(firstLetterFilter).toBeInTheDocument();
+
+    userEvent.click(ingredientFilter);
+    userEvent.type(searchInput, 'chicken congee');
+    // const ALERTVALUE = 'Your search must have only 1 (one) character';
+    userEvent.click(firstLetterFilter);
+    userEvent.type('aa');
+    userEvent.click(searchBtn);
+    userEvent.click(nameFilter);
+    userEvent.type('chicken');
+
+    userEvent.click(searchBtn);
   });
+});
+it('Testando Drinks', () => {
+  const { history } = renderWithRouter(<App />);
+  act(() => {
+    history.push('/drinks');
+  });
+  const searchInp = screen.getByTestId('search-input');
+  const searchBtn = screen.getByTestId('exec-search-btn');
+  const ingredientFilter = screen.getByTestId('ingredient-search-radio');
+  const nameFilter = screen.getByTestId('name-search-radio');
+  const firstLetterFilter = screen.getByTestId('first-letter-search-radio');
+  userEvent.click(ingredientFilter);
+  userEvent.type(searchInp, 'mint');
+  userEvent.click(firstLetterFilter);
+  userEvent.type('bb');
+  userEvent.click(nameFilter);
+  userEvent.type('Mojito');
+  userEvent.click(searchBtn);
+});
+
+it('Testando se a barra de busca desaparece', () => {
+  const { history } = renderWithRouter(<App />);
+  act(() => {
+    history.push('/meals');
+  });
+  // const searchBtn = screen.getByTestId('exec-search-btn');
+  // const ingredientFilter = screen.getByTestId('ingredient-search-radio');
+  // const nameFilter = screen.getByTestId('name-search-radio');
+  // const firstLetterFilter = screen.getByTestId('first-letter-search-radio');
+  const searchIcon = screen.getByTestId('search-top-btn');
+  const searchInput = screen.getByTestId(searchInputConst);
+
+  userEvent.click(searchIcon);
+  expect(searchInput).toBeInTheDocument();
+  userEvent.click(searchIcon);
+  expect(searchInput).notToBeInTheDocument();
 });
