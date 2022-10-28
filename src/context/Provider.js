@@ -35,6 +35,7 @@ function Provider({ children }) {
     setFoodList(meals);
     return meals;
   };
+
   const getFoodByName = async (nome) => {
     const responseName = await fetch(
       `https://www.themealdb.com/api/json/v1/1/search.php?s=${nome}`,
