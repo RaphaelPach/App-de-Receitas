@@ -1,4 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import AppContext from '../context/AppContext';
 import Header from './Header';
 import ItemCard from './ItemCard';
@@ -13,12 +14,15 @@ function Recipes(props) {
 
   const renderFoodCards = (info) => info
     .filter((_, i) => i < MAX_ITENS)
-    .map((e, index) => (<ItemCard
-      key={ e.idMeal }
-      index={ index }
-      name={ e.strMeal }
-      img={ e.strMealThumb }
-    />));
+    .map((e, index) => (
+      <Link key={ e.idMeal } to={ `/meals/${e.idMeal}` }>
+        <ItemCard
+          index={ index }
+          name={ e.strMeal }
+          img={ e.strMealThumb }
+        />
+      </Link>
+    ));
 
   useEffect(() => {
     const getFoodList = async () => {
