@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
+import AppContext from '../context/AppContext';
 
 export default function CategoriesFilter(props) {
   const { drinks, meals } = props;
 
   const [categories, setCategories] = useState([{}]);
+  const { getDrinkByCategory,
+    getFoodByCategory, getFoods, getDrinks } = useContext(AppContext);
 
   useEffect(() => {
     const fetchCategoriesFoods = async () => {
@@ -39,12 +42,21 @@ export default function CategoriesFilter(props) {
       {categories?.filter((ele, index) => index < FIVE).map((e, i) => (
         <button
           data-testid={ `${e.strCategory}-category-filter` }
+          onClick={ meals ? () => getFoodByCategory(e.strCategory)
+            : () => getDrinkByCategory(e.strCategory) }
           type="button"
           key={ `${e.strCategory}-${i}` }
         >
           { e.strCategory }
         </button>
       ))}
+      <button
+        data-testid="All-category-filter"
+        onClick={ meals ? getFoods : getDrinks }
+        type="button"
+      >
+        All
+      </button>
     </div>
   );
 }
