@@ -6,6 +6,8 @@ export default function CategoriesFilter(props) {
   const { drinks, meals } = props;
 
   const [categories, setCategories] = useState([{}]);
+  const [filteredBy, setFilteredBy] = useState('');
+
   const { getDrinkByCategory,
     getFoodByCategory, getFoods, getDrinks } = useContext(AppContext);
 
@@ -35,6 +37,26 @@ export default function CategoriesFilter(props) {
     }
   }, [meals, drinks]);
 
+  const filterFoods = (category) => {
+    if (filteredBy !== category) {
+      getFoodByCategory(category);
+      setFilteredBy(category);
+    } else {
+      getFoods();
+      setFilteredBy('');
+    }
+  };
+
+  const filterDrinks = (category) => {
+    if (filteredBy !== category) {
+      getDrinkByCategory(category);
+      setFilteredBy(category);
+    } else {
+      getDrinks();
+      setFilteredBy('');
+    }
+  };
+
   const FIVE = 5;
 
   return (
@@ -42,8 +64,8 @@ export default function CategoriesFilter(props) {
       {categories?.filter((ele, index) => index < FIVE).map((e, i) => (
         <button
           data-testid={ `${e.strCategory}-category-filter` }
-          onClick={ meals ? () => getFoodByCategory(e.strCategory)
-            : () => getDrinkByCategory(e.strCategory) }
+          onClick={ meals ? () => filterFoods(e.strCategory)
+            : () => filterDrinks(e.strCategory) }
           type="button"
           key={ `${e.strCategory}-${i}` }
         >
