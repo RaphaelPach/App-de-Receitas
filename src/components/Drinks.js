@@ -3,6 +3,7 @@ import AppContext from '../context/AppContext';
 import Header from './Header';
 import ItemCard from './ItemCard';
 import Footer from './Footer';
+import CategoriesFilter from './Recipes';
 
 export default function Drinks(props) {
   const [getDrink, setGetDrink] = useState([]);
@@ -33,6 +34,7 @@ export default function Drinks(props) {
   return (
     <div>
       <Header { ...props } title="Drinks" profile search />
+      <CategoriesFilter drinks />
       {
         drinkList?.length > 0 ? renderDrinkCards(drinkList) : getDrink
       }

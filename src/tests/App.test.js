@@ -20,6 +20,7 @@ describe('Testando App de Receitas', () => {
 });
 
 const searchInputConst = 'search-input';
+const iconBtn = 'search-top-btn';
 
 describe('Testando Header', () => {
   it('Testando Funcionamento da tela de header', () => {
@@ -27,6 +28,8 @@ describe('Testando Header', () => {
     act(() => {
       history.push('/meals');
     });
+    const searchIcon = screen.getByTestId(iconBtn);
+    userEvent.click(searchIcon);
     const textMeals = screen.getByRole('heading', { name: /meals/i });
     const searchBtn = screen.getByTestId(searchInputConst);
     const profileBtn = screen.getByTestId('profile-top-btn');
@@ -42,11 +45,9 @@ describe('Testando Header', () => {
   });
 });
 describe('Testando SearchBar', () => {
-  it('Testando Funcionamento do SearchBar', async () => {
-    const { history } = renderWithRouter(<App />);
-
+  it('Testando Funcionamento do SearchBar', () => {
     act(() => {
-      history.push('/meals');
+      renderWithRouter(<App />);
     });
 
     const openSearchBar = screen.getByTestId('search-top-btn');
@@ -77,40 +78,42 @@ describe('Testando SearchBar', () => {
 
     userEvent.click(searchBtn);
   });
-});
-it('Testando Drinks', () => {
-  const { history } = renderWithRouter(<App />);
-  act(() => {
-    history.push('/drinks');
+  it('Testando Drinks', () => {
+    const { history } = renderWithRouter(<App />);
+    act(() => {
+      history.push('/drinks');
+    });
+    const searchIcon = screen.getByTestId(iconBtn);
+    userEvent.click(searchIcon);
+    const searchInp = screen.getByTestId('search-input');
+    const searchBtn = screen.getByTestId('exec-search-btn');
+    const ingredientFilter = screen.getByTestId('ingredient-search-radio');
+    const nameFilter = screen.getByTestId('name-search-radio');
+    const firstLetterFilter = screen.getByTestId('first-letter-search-radio');
+    userEvent.click(ingredientFilter);
+    userEvent.type(searchInp, 'mint');
+    userEvent.click(firstLetterFilter);
+    userEvent.type('bb');
+    userEvent.click(nameFilter);
+    userEvent.type('Mojito');
+    userEvent.click(searchBtn);
   });
-  const searchInp = screen.getByTestId('search-input');
-  const searchBtn = screen.getByTestId('exec-search-btn');
-  const ingredientFilter = screen.getByTestId('ingredient-search-radio');
-  const nameFilter = screen.getByTestId('name-search-radio');
-  const firstLetterFilter = screen.getByTestId('first-letter-search-radio');
-  userEvent.click(ingredientFilter);
-  userEvent.type(searchInp, 'mint');
-  userEvent.click(firstLetterFilter);
-  userEvent.type('bb');
-  userEvent.click(nameFilter);
-  userEvent.type('Mojito');
-  userEvent.click(searchBtn);
-});
 
-it('Testando se a barra de busca desaparece', () => {
-  const { history } = renderWithRouter(<App />);
-  act(() => {
-    history.push('/meals');
+  it('Testando se a barra de busca desaparece', () => {
+    const { history } = renderWithRouter(<App />);
+    act(() => {
+      history.push('/meals');
+    });
+    // const searchBtn = screen.getByTestId('exec-search-btn');
+    // const ingredientFilter = screen.getByTestId('ingredient-search-radio');
+    // const nameFilter = screen.getByTestId('name-search-radio');
+    // const firstLetterFilter = screen.getByTestId('first-letter-search-radio');
+    const searchIcon = screen.getByTestId(iconBtn);
+    userEvent.click(searchIcon);
+    const searchInput = screen.getByTestId(searchInputConst);
+
+    expect(searchInput).toBeInTheDocument();
+    userEvent.click(searchIcon);
+    expect(screen.queryByTestId(searchInputConst)).toBeNull();
   });
-  // const searchBtn = screen.getByTestId('exec-search-btn');
-  // const ingredientFilter = screen.getByTestId('ingredient-search-radio');
-  // const nameFilter = screen.getByTestId('name-search-radio');
-  // const firstLetterFilter = screen.getByTestId('first-letter-search-radio');
-  const searchIcon = screen.getByTestId('search-top-btn');
-  const searchInput = screen.getByTestId(searchInputConst);
-
-  userEvent.click(searchIcon);
-  expect(searchInput).toBeInTheDocument();
-  userEvent.click(searchIcon);
-  expect(searchInput).notToBeInTheDocument();
 });
