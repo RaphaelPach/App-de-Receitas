@@ -35,15 +35,10 @@ function Recipes(props) {
       <Header { ...props } title="Meals" search profile />
       {
         foodList.length > 0 ? renderFoodCards(foodList) : getFood
-        foodList?.filter((_, i) => i < MAX_ITENS).map((e, index) => (<ItemCard
-          key={ e.idMeal }
-          index={ index }
-          name={ e.strMeal }
-          img={ e.strMealThumb }
-        />))
       }
       <Footer />
     </div>
+
   );
 }
 
