@@ -9,7 +9,7 @@ export default function SearchBar(props) {
     getFoodByIngredient,
     getFoodByName,
     getFoodByFirstLetter,
-    getDrinks,
+    getDrinkByIngredient,
     getDrinksByName,
     getDrinksByFirstLetter,
     foodList,
@@ -66,7 +66,7 @@ export default function SearchBar(props) {
 
   const searchDrink = () => {
     if (option === 'ingredient') {
-      getDrinks(search);
+      getDrinkByIngredient(search);
     }
 
     if (option === 'name') {
