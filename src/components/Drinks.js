@@ -1,4 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import AppContext from '../context/AppContext';
 import Header from './Header';
 import ItemCard from './ItemCard';
@@ -13,12 +14,15 @@ export default function Drinks(props) {
 
   const renderDrinkCards = (data) => data
     .filter((_, i) => i < MAX_ITENS)
-    .map((e, index) => (<ItemCard
-      key={ e.idDrink }
-      index={ index }
-      name={ e.strDrink }
-      img={ e.strDrinkThumb }
-    />));
+    .map((e, index) => (
+      <Link key={ e.idDrink } to={ `/drinks/${e.idDrink}` }>
+        <ItemCard
+          index={ index }
+          name={ e.strDrink }
+          img={ e.strDrinkThumb }
+        />
+      </Link>
+    ));
 
   useEffect(() => {
     const getDrinkList = async () => {
