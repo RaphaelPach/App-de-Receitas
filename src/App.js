@@ -10,6 +10,7 @@ import Profile from './components/Profile';
 import FavoriteRecipes from './components/FavoriteRecipes';
 import MealsDetails from './components/MealsDetails';
 import DrinksDetails from './components/DrinksDetails';
+import Footer from './components/Footer';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route exact path="/favorite-recipes" component={ FavoriteRecipes } />
         <Route exact path="/meals/:id" component={ MealsDetails } />
         <Route exact path="/drinks/:id" component={ DrinksDetails } />
+        <Route exact path="/footer" component={ Footer } />
       </Switch>
     </Provider>
   );

@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import AppContext from '../context/AppContext';
 import Header from './Header';
 import ItemCard from './ItemCard';
+import Footer from './Footer';
 
 export default function Drinks(props) {
   const [getDrink, setGetDrink] = useState([]);
@@ -35,6 +36,7 @@ export default function Drinks(props) {
       {
         drinkList.length > 0 ? renderDrinkCards(drinkList) : getDrink
       }
+      <Footer />
     </div>
   );
 }
