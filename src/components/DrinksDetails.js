@@ -5,6 +5,7 @@ export default function DetailsDrinks(props) {
   const { match: { params: { id } } } = props;
 
   const [data, setData] = useState([]);
+  const [ingredients, setIngredients] = useState([]);
 
   useEffect(() => {
     const fetchId = async (itemId) => {
@@ -13,12 +14,28 @@ export default function DetailsDrinks(props) {
       const { drinks } = await response.json();
 
       setData(drinks[0]);
+      setIngredients(Object.keys(drinks[0]).filter((e) => e.includes('strIng')));
     };
 
     fetchId(id);
   }, [id]);
 
-  return <div>{ data.idDrink }</div>;
+  return (
+    <div>
+      <h1 data-testid="recipe-title">{ data.strDrink }</h1>
+      <p data-testid="recipe-category">{ data.strAlcoholic }</p>
+      <img data-testid="recipe-photo" src={ data.strDrinkThumb } alt={ data.strDrink } />
+      <p data-testid="instructions">{ data.strInstructions }</p>
+      {
+        ingredients?.map((e, i) => (
+          <div data-testid={ `${i}-ingredient-name-and-measure` } key={ e }>
+            <p>{data[e]}</p>
+            <p>{ data[`strMeasure${i + 1}`] }</p>
+          </div>
+        ))
+      }
+    </div>
+  );
 }
 
 DetailsDrinks.propTypes = {

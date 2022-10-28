@@ -1,6 +1,6 @@
+import userEvent from '@testing-library/user-event';
 import React from 'react';
-/* import { screen, act } from '@testing-library/react';
-import userEvent from '@testing-library/user-event'; */
+import { screen, act } from '@testing-library/react';
 import App from '../App';
 import renderWithRouter from './services/renderWithRouter';
 
@@ -23,6 +23,24 @@ describe('Testando App de Receitas', () => {
     expect(dessertBtn).toBeInTheDocument();
     expect(goatBtn).toBeInTheDocument();
     expect(all).toBeInTheDocument();
+    userEvent.click(beefBtn);
+    const mustardPie = getByTestId('0-card-name');
+    expect(mustardPie).toBeInTheDocument();
+    userEvent.click(breakfastBtn);
+    const breakPotatos = screen.getByRole('heading', { name: /breakfast potatoes/i });
+    expect(breakPotatos).toBeInTheDocument();
+    userEvent.click(chickenBtn);
+    const chicken = screen.getByRole('heading', { name: /ayam percik/i });
+    expect(chicken).toBeInTheDocument();
+    userEvent.click(dessertBtn);
+    const apam = screen.getByRole('heading', { name: /apam balik/i });
+    expect(apam).toBeInTheDocument();
+    userEvent.click(goatBtn);
+    const goat = screen.getByRole('heading', { name: /mbuzi choma \(roasted goat\)/i });
+    expect(goat).toBeInTheDocument();
+    userEvent.click(all);
+    const soup = screen.getByRole('heading', { name: /corba/i });
+    expect(soup).toBeInTheDocument();
   });
   it('cobrir 90%', async () => {
     const { history } = renderWithRouter(<App />);
