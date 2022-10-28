@@ -3,6 +3,7 @@ import Header from './Header';
 import Footer from './Footer';
 
 export default function Profile() {
+  const getEmail = localStorage.getItem('user');
   const handleClickLogout = () => {
     localStorage.removeItem('user');
     localStorage.removeItem('doneRecipes');
@@ -12,7 +13,9 @@ export default function Profile() {
   return (
     <div>
       <Header title="Profile" profile />
-      <h2 data-testid="profile-email">email</h2>
+      <h2 data-testid="profile-email">
+        { getEmail }
+      </h2>
       <Link to="/done-recipes">
         <button type="button" data-testid="profile-done-btn">
           Done Recipes
