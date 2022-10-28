@@ -34,7 +34,7 @@ export default function Drinks(props) {
     <div>
       <Header { ...props } title="Drinks" profile search />
       {
-        drinkList.length > 0 ? renderDrinkCards(drinkList) : getDrink
+        drinkList?.length > 0 ? renderDrinkCards(drinkList) : getDrink
       }
       <Footer />
     </div>
