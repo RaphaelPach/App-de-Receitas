@@ -119,7 +119,6 @@ function Provider({ children }) {
       `https://www.thecocktaildb.com/api/json/v1/1/search.php?f=${primeiraLetra}`,
     );
     const { drinks } = await responseDrinkByFirstLetter.json();
-    console.log('log', drinks);
 
     setDrinkList(drinks);
     return drinks;
