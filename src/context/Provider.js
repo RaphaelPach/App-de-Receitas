@@ -92,7 +92,6 @@ function Provider({ children }) {
       `https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${ingrediente}`,
     );
     const { drinks } = await responseDrink.json();
-    console.log('log', drinks);
 
     setDrinkList(drinks);
     if (drinks === null) {
