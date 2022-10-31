@@ -92,7 +92,6 @@ function Provider({ children }) {
       `https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${ingrediente}`,
     );
     const { drinks } = await responseDrink.json();
-    console.log('log', drinks);
 
     setDrinkList(drinks);
     if (drinks === null) {
@@ -106,7 +105,6 @@ function Provider({ children }) {
       `https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${nome}`,
     );
     const { drinks } = await responseDrinkByName.json();
-    console.log('log', drinks);
 
     setDrinkList(drinks);
     if (drinks === null) {
@@ -120,7 +118,6 @@ function Provider({ children }) {
       `https://www.thecocktaildb.com/api/json/v1/1/search.php?f=${primeiraLetra}`,
     );
     const { drinks } = await responseDrinkByFirstLetter.json();
-    console.log('log', drinks);
 
     setDrinkList(drinks);
     return drinks;
