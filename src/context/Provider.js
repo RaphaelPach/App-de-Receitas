@@ -106,7 +106,6 @@ function Provider({ children }) {
       `https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${nome}`,
     );
     const { drinks } = await responseDrinkByName.json();
-    console.log('log', drinks);
 
     setDrinkList(drinks);
     if (drinks === null) {
