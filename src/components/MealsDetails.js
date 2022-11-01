@@ -7,6 +7,7 @@ export default function MealsDetails(props) {
   const { id } = props;
 
   const [data, setData] = useState([]);
+  const [doneRecipes, setDoneRecipes] = useState([]);
   const [ingredients, setIngredients] = useState([]);
   const [videoUrl, setVideoUrl] = useState('');
 
@@ -23,6 +24,7 @@ export default function MealsDetails(props) {
       setVideoUrl(embedVideo);
     };
 
+    setDoneRecipes(JSON.parse(localStorage.getItem('doneRecipes')));
     fetchId(id);
   }, [id]);
 
@@ -49,7 +51,11 @@ export default function MealsDetails(props) {
         }
         <iframe data-testid="video" src={ videoUrl } title="Recipe Video" />
       </div>
-      <StartRecipe />
+
+      {
+        doneRecipes?.filter((e) => e.name === data.strMeal)
+          .length === 0 && <StartRecipe />
+      }
     </>
   );
 }
