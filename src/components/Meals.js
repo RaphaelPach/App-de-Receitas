@@ -5,6 +5,8 @@ import Header from './Header';
 import ItemCard from './ItemCard';
 import Footer from './Footer';
 import CategoriesFilter from './Recipes';
+import 'bootstrap/dist/css/bootstrap.css';
+import Carousel from './Carousel';
 
 function Recipes(props) {
   const [getFood, setGetFood] = useState([]);
@@ -26,9 +28,7 @@ function Recipes(props) {
 
   useEffect(() => {
     const getFoodList = async () => {
-      const responseName = await fetch(
-        'https://www.themealdb.com/api/json/v1/1/search.php?s=',
-      );
+      const responseName = await fetch('https://www.themealdb.com/api/json/v1/1/search.php?s=');
       const { meals } = await responseName.json();
       setGetFood(renderFoodCards(meals));
     };
@@ -39,6 +39,7 @@ function Recipes(props) {
     <div>
       <Header { ...props } title="Meals" search profile />
       <CategoriesFilter meals />
+      <Carousel show={ 2 } type="drinks" />
       {
         foodList?.length > 0 ? renderFoodCards(foodList) : getFood
       }

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import Carousel from './Carousel';
 
 export default function MealsDetails(props) {
   const { match: { params: { id } } } = props;
@@ -25,21 +26,29 @@ export default function MealsDetails(props) {
   }, [id]);
 
   return (
-    <div>
-      <h1 data-testid="recipe-title">{ data.strMeal }</h1>
-      <p data-testid="recipe-category">{ data.strCategory }</p>
-      <img data-testid="recipe-photo" src={ data.strMealThumb } alt={ data.strMeal } />
-      <p data-testid="instructions">{ data.strInstructions }</p>
-      {
-        ingredients?.map((e, i) => (
-          <div data-testid={ `${i}-ingredient-name-and-measure` } key={ e }>
-            <p>{data[e]}</p>
-            <p>{ data[`strMeasure${i + 1}`] }</p>
-          </div>
-        ))
-      }
-      <iframe data-testid="video" src={ videoUrl } title="Recipe Video" />
-    </div>
+    <>
+      <Carousel show={ 2 } type="drinks" />
+      <div>
+        <h1 data-testid="recipe-title">{ data.strMeal }</h1>
+        <p data-testid="recipe-category">{ data.strCategory }</p>
+        <img
+          data-testid="recipe-photo"
+          src={ data.strMealThumb }
+          alt={ data.strMeal }
+          style={ { width: '100%' } }
+        />
+        <p data-testid="instructions">{ data.strInstructions }</p>
+        {
+          ingredients?.map((e, i) => (
+            <div data-testid={ `${i}-ingredient-name-and-measure` } key={ e }>
+              <p>{data[e]}</p>
+              <p>{ data[`strMeasure${i + 1}`] }</p>
+            </div>
+          ))
+        }
+        <iframe data-testid="video" src={ videoUrl } title="Recipe Video" />
+      </div>
+    </>
   );
 }
 
