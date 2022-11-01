@@ -8,6 +8,7 @@ export default function MealsDetails(props) {
 
   const [data, setData] = useState([]);
   const [doneRecipes, setDoneRecipes] = useState([]);
+  const [inProgress, setInProgress] = useState([]);
   const [ingredients, setIngredients] = useState([]);
   const [videoUrl, setVideoUrl] = useState('');
 
@@ -25,8 +26,25 @@ export default function MealsDetails(props) {
     };
 
     setDoneRecipes(JSON.parse(localStorage.getItem('doneRecipes')));
+    setInProgress(JSON.parse(localStorage.getItem('inProgressRecipes')));
     fetchId(id);
   }, [id]);
+
+  const recipeButton = (name, itemId) => {
+    if (inProgress && inProgress.meals) {
+      const result = Object.keys(inProgress.meals).some((e) => e === itemId);
+
+      if (result) {
+        return doneRecipes?.filter((e) => e.name === name)
+          .length < 0 ? null
+          : <StartRecipe inProgress />;
+      }
+    }
+
+    return doneRecipes?.filter((e) => e.name === name)
+      .length < 0 ? null
+      : <StartRecipe />;
+  };
 
   return (
     <>
@@ -53,9 +71,9 @@ export default function MealsDetails(props) {
       </div>
 
       {
-        doneRecipes?.filter((e) => e.name === data.strMeal)
-          .length === 0 && <StartRecipe />
+        recipeButton(data.strMeal, data.idMeal)
       }
+
     </>
   );
 }
