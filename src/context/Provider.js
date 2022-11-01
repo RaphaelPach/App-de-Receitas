@@ -33,23 +33,27 @@ function Provider({ children }) {
     setFoodList(meals);
   };
 
+  const GLOBAL_ALERT = `${'Sorry, we haven\'t found any recipes for these filters.'}`;
   const getFoodByIngredient = async (ingrediente) => {
     const response = await fetch(
       `https://www.themealdb.com/api/json/v1/1/filter.php?i=${ingrediente}`,
     );
     const { meals } = await response.json();
-
     setFoodList(meals);
+    if (meals === null) {
+      return global.alert(GLOBAL_ALERT);
+    }
     return meals;
   };
-
   const getFoodByName = async (nome) => {
     const responseName = await fetch(
       `https://www.themealdb.com/api/json/v1/1/search.php?s=${nome}`,
     );
     const { meals } = await responseName.json();
-
     setFoodList(meals);
+    if (meals === null) {
+      return global.alert(GLOBAL_ALERT);
+    }
     return meals;
   };
 
@@ -88,27 +92,32 @@ function Provider({ children }) {
       `https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${ingrediente}`,
     );
     const { drinks } = await responseDrink.json();
-    console.log('log', drinks);
 
     setDrinkList(drinks);
+    if (drinks === null) {
+      return global.alert(GLOBAL_ALERT);
+    }
     return drinks;
   };
+
   const getDrinksByName = async (nome) => {
     const responseDrinkByName = await fetch(
       `https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${nome}`,
     );
     const { drinks } = await responseDrinkByName.json();
-    console.log('log', drinks);
 
     setDrinkList(drinks);
+    if (drinks === null) {
+      return global.alert(GLOBAL_ALERT);
+    }
     return drinks;
   };
+
   const getDrinksByFirstLetter = async (primeiraLetra) => {
     const responseDrinkByFirstLetter = await fetch(
       `https://www.thecocktaildb.com/api/json/v1/1/search.php?f=${primeiraLetra}`,
     );
     const { drinks } = await responseDrinkByFirstLetter.json();
-    console.log('log', drinks);
 
     setDrinkList(drinks);
     return drinks;
@@ -157,6 +166,9 @@ function Provider({ children }) {
       handleClickSubmit,
       drinkList,
       foodList,
+      getFoodByIngredient,
+      getFoodByName,
+
     ],
   );
   return <AppContext.Provider value={ contexto }>{children}</AppContext.Provider>;

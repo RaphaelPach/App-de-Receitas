@@ -59,8 +59,6 @@ export default function SearchBar(props) {
       } else {
         global.alert('Your search must have only 1 (one) character');
       }
-    } else {
-      global.alert(`${'Sorry, we haven\'t found any recipes for these filters.'}`);
     }
   };
 
@@ -80,8 +78,6 @@ export default function SearchBar(props) {
       } else {
         global.alert('Your search must have only 1 (one) character');
       }
-    } else {
-      global.alert(`${'Sorry, we haven\'t found any recipes for these filters.'}`);
     }
   };
 
