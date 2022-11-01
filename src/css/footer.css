@@ -1,4 +1,4 @@
-#footer {
-  bottom: 0px;
+.footer {
+  bottom: 0;
   position: fixed;
 }

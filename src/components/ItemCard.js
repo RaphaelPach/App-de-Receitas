@@ -6,7 +6,12 @@ export default function ItemCard(props) {
   return (
     <div data-testid={ `${index}-recipe-card` }>
       <h2 data-testid={ `${index}-card-name` }>{ name }</h2>
-      <img data-testid={ `${index}-card-img` } src={ img } alt={ name } />
+      <img
+        data-testid={ `${index}-card-img` }
+        src={ img }
+        alt={ name }
+        style={ { width: '100%' } }
+      />
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import Carousel from './Carousel';
 
 export default function DetailsDrinks(props) {
   const { match: { params: { id } } } = props;
@@ -21,20 +22,28 @@ export default function DetailsDrinks(props) {
   }, [id]);
 
   return (
-    <div>
-      <h1 data-testid="recipe-title">{ data.strDrink }</h1>
-      <p data-testid="recipe-category">{ data.strAlcoholic }</p>
-      <img data-testid="recipe-photo" src={ data.strDrinkThumb } alt={ data.strDrink } />
-      <p data-testid="instructions">{ data.strInstructions }</p>
-      {
-        ingredients?.map((e, i) => (
-          <div data-testid={ `${i}-ingredient-name-and-measure` } key={ e }>
-            <p>{data[e]}</p>
-            <p>{ data[`strMeasure${i + 1}`] }</p>
-          </div>
-        ))
-      }
-    </div>
+    <>
+      <Carousel show={ 2 } type="meals" />
+      <div>
+        <h1 data-testid="recipe-title">{ data.strDrink }</h1>
+        <p data-testid="recipe-category">{ data.strAlcoholic }</p>
+        <img
+          data-testid="recipe-photo"
+          src={ data.strDrinkThumb }
+          alt={ data.strDrink }
+          style={ { width: '100%' } }
+        />
+        <p data-testid="instructions">{ data.strInstructions }</p>
+        {
+          ingredients?.map((e, i) => (
+            <div data-testid={ `${i}-ingredient-name-and-measure` } key={ e }>
+              <p>{data[e]}</p>
+              <p>{ data[`strMeasure${i + 1}`] }</p>
+            </div>
+          ))
+        }
+      </div>
+    </>
   );
 }
 
