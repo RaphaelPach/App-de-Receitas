@@ -53,7 +53,7 @@ export default function MealsDetails(props) {
     </>
   );
 }
-
+// Requisito 28 e 29 adiconado
 MealsDetails.propTypes = {
   match: PropTypes.shape().isRequired,
 };
