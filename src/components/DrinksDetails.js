@@ -4,9 +4,11 @@ import Carousel from './Carousel';
 import StartRecipe from './StartRecipe';
 
 export default function DetailsDrinks(props) {
-  const { match: { params: { id } } } = props;
+  const { id } = props;
 
   const [data, setData] = useState([]);
+  const [doneRecipes, setDoneRecipes] = useState([]);
+  const [inProgress, setInProgress] = useState([]);
   const [ingredients, setIngredients] = useState([]);
 
   useEffect(() => {
@@ -19,8 +21,26 @@ export default function DetailsDrinks(props) {
       setIngredients(Object.keys(drinks[0]).filter((e) => e.includes('strIng')));
     };
 
+    setDoneRecipes(JSON.parse(localStorage.getItem('doneRecipes')));
+    setInProgress(JSON.parse(localStorage.getItem('inProgressRecipes')));
     fetchId(id);
   }, [id]);
+
+  const recipeButton = (name, itemId) => {
+    if (inProgress && inProgress.drinks) {
+      const result = Object.keys(inProgress.drinks).some((e) => e === itemId);
+
+      if (result) {
+        return doneRecipes?.filter((e) => e.name === name)
+          .length < 0 ? null
+          : <StartRecipe inProgress />;
+      }
+    }
+
+    return doneRecipes?.filter((e) => e.name === name)
+      .length < 0 ? null
+      : <StartRecipe />;
+  };
 
   return (
     <>
@@ -44,11 +64,13 @@ export default function DetailsDrinks(props) {
           ))
         }
       </div>
-      <StartRecipe />
+      {
+        recipeButton(data.strDrink, data.idDrink)
+      }
     </>
   );
 }
 
 DetailsDrinks.propTypes = {
-  match: PropTypes.shape().isRequired,
+  id: PropTypes.string.isRequired,
 };

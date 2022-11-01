@@ -32,6 +32,7 @@ function Recipes(props) {
       const { meals } = await responseName.json();
       setGetFood(renderFoodCards(meals));
     };
+
     getFoodList();
   }, []);
 
