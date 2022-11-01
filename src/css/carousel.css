@@ -32,7 +32,7 @@
   display: none;
 }
 
-.carousel-content>* {
+.carousel-content > * {
   width: 100%;
   flex-shrink: 0;
   flex-grow: 1;
@@ -59,7 +59,7 @@
   right: 24px;
 }
 
-@media (hover : none ) and ( pointer : coarse ) {
+@media ( hover : none ) and ( pointer : coarse ) {
 
   .left-arrow,
   .right-arrow {

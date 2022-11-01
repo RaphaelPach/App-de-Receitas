@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Carousel from './Carousel';
+import StartRecipe from './StartRecipe';
 
 export default function MealsDetails(props) {
   const { match: { params: { id } } } = props;
@@ -48,6 +49,7 @@ export default function MealsDetails(props) {
         }
         <iframe data-testid="video" src={ videoUrl } title="Recipe Video" />
       </div>
+      <StartRecipe />
     </>
   );
 }

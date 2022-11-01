@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Carousel from './Carousel';
+import StartRecipe from './StartRecipe';
 
 export default function DetailsDrinks(props) {
   const { match: { params: { id } } } = props;
@@ -43,6 +44,7 @@ export default function DetailsDrinks(props) {
           ))
         }
       </div>
+      <StartRecipe />
     </>
   );
 }
