@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import '../css/carousel.css';
 
@@ -37,9 +38,9 @@ function Carousel(props) {
     setTouchPosition(null);
   };
 
-  const recomendationItemCard = (id, name, img, index, visible) => (
-    <Link key={ id } to={ `/meals/${id}` }>
-      <div className={ visible && 'hidden' }>
+  const recomendationItemCard = ({ id, name, img, index, visible }) => (
+    <Link className={ visible && 'hidden' } key={ id } to={ `/meals/${id}` }>
+      <div>
         <h6 data-testid={ `${index}-recommendation-title` }>{ name }</h6>
         <img
           data-testid={ `${index}-recommendation-card` }
@@ -58,7 +59,21 @@ function Carousel(props) {
       const data = drinks
         .filter((_, index) => index < MAX_CAROUSEL)
         .map((e, index) => (
-          recomendationItemCard(e.idDrink, e.strDrink, e.strDrinkThumb, index)));
+          index === 0 || index === 1 ? (
+            recomendationItemCard({
+              id: e.idDrink,
+              name: e.strDrink,
+              img: e.strDrinkThumb,
+              index,
+            }))
+            : recomendationItemCard({
+              id: e.idDrink,
+              name: e.strDrink,
+              img: e.strDrinkThumb,
+              index,
+              visible: 'not',
+            })
+        ));
       return data;
     };
     setRecomendations(await getDrinkList());
@@ -71,7 +86,19 @@ function Carousel(props) {
       const data = meals
         .filter((_, index) => index < MAX_CAROUSEL)
         .map((e, index) => (
-          recomendationItemCard(e.idMeal, e.strMeal, e.strMealThumb, index)));
+          index === 0 || index === 1 ? (
+            recomendationItemCard({ id: e.idMeal,
+              name: e.strMeal,
+              img: e.strMealThumb,
+              index }))
+            : recomendationItemCard({
+              id: e.idMeal,
+              name: e.strMeal,
+              img: e.strMealThumb,
+              index,
+              visible: 'not-visible',
+            })
+        ));
       return data;
     };
     setRecomendations(await getMealsList());
@@ -116,5 +143,10 @@ function Carousel(props) {
     </div>
   );
 }
+
+Carousel.propTypes = {
+  show: PropTypes.number.isRequired,
+  type: PropTypes.string.isRequired,
+};
 
 export default Carousel;
