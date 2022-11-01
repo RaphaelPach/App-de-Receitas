@@ -7,9 +7,8 @@ import Provider from './context/Provider';
 import Drinks from './components/Drinks';
 import DoneRecipes from './components/DoneRecipes';
 import Profile from './components/Profile';
+import RecipeDetails from './components/RecipeDetails';
 import FavoriteRecipes from './components/FavoriteRecipes';
-import MealsDetails from './components/MealsDetails';
-import DrinksDetails from './components/DrinksDetails';
 import Footer from './components/Footer';
 
 function App() {
@@ -22,8 +21,20 @@ function App() {
         <Route exact path="/drinks" component={ Drinks } />
         <Route exact path="/profile" component={ Profile } />
         <Route exact path="/favorite-recipes" component={ FavoriteRecipes } />
-        <Route exact path="/meals/:id" component={ MealsDetails } />
-        <Route exact path="/drinks/:id" component={ DrinksDetails } />
+        <Route
+          exact
+          path="/meals/:id"
+          render={
+            (routeProps) => <RecipeDetails type="meal" { ...routeProps } />
+          }
+        />
+        <Route
+          exact
+          path="/drinks/:id"
+          render={
+            (routeProps) => <RecipeDetails type="drink" { ...routeProps } />
+          }
+        />
         <Route exact path="/footer" component={ Footer } />
       </Switch>
     </Provider>

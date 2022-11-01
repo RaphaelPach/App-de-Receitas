@@ -4,7 +4,7 @@ import Carousel from './Carousel';
 import StartRecipe from './StartRecipe';
 
 export default function DetailsDrinks(props) {
-  const { match: { params: { id } } } = props;
+  const { id } = props;
 
   const [data, setData] = useState([]);
   const [ingredients, setIngredients] = useState([]);
@@ -50,5 +50,5 @@ export default function DetailsDrinks(props) {
 }
 
 DetailsDrinks.propTypes = {
-  match: PropTypes.shape().isRequired,
+  id: PropTypes.string.isRequired,
 };
