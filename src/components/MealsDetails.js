@@ -169,6 +169,6 @@ export default function MealsDetails(props) {
 }
 // Requisito 28 e 29 adiconado
 MealsDetails.propTypes = {
-  history: PropTypes.string.isRequired,
+  history: PropTypes.shape().isRequired,
   id: PropTypes.string.isRequired,
 };
