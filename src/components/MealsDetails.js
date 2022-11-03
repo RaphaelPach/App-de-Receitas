@@ -72,13 +72,13 @@ export default function MealsDetails(props) {
 
       if (result) {
         return doneRecipes?.filter((e) => e.name === name).length < 0 ? null : (
-          <StartRecipe inProgress />
+          <StartRecipe inProgress id={ itemId } type="meals" />
         );
       }
     }
 
     return doneRecipes?.filter((e) => e.name === name).length < 0 ? null : (
-      <StartRecipe />
+      <StartRecipe id={ itemId } type="meals" />
     );
   };
 
