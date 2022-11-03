@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Carousel from './Carousel';
+import whiteHeartIcon from '../images/whiteHeartIcon.svg';
+import shareIcon from '../images/shareIcon.svg';
 import StartRecipe from './StartRecipe';
 
 export default function DetailsDrinks(props) {
@@ -48,6 +51,23 @@ export default function DetailsDrinks(props) {
       <div>
         <h1 data-testid="recipe-title">{ data.strDrink }</h1>
         <p data-testid="recipe-category">{ data.strAlcoholic }</p>
+        <div style={ { position: 'absolute' } }>
+          <Link to="/drinks">
+            <img
+              src={ shareIcon }
+              alt="whiteHeart"
+              data-testid="share-btn"
+              style={ { marginRight: '4px' } }
+            />
+          </Link>
+          <Link to="/drinks">
+            <img
+              src={ whiteHeartIcon }
+              alt="whiteHeart"
+              data-testid="favorite-btn"
+            />
+          </Link>
+        </div>
         <img
           data-testid="recipe-photo"
           src={ data.strDrinkThumb }
