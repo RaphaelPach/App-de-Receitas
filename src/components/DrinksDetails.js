@@ -6,6 +6,8 @@ import blackHeartIcon from '../images/blackHeartIcon.svg';
 import shareIcon from '../images/shareIcon.svg';
 import StartRecipe from './StartRecipe';
 
+const copy = require('clipboard-copy');
+
 export default function DetailsDrinks(props) {
   const { id } = props;
 
@@ -15,6 +17,7 @@ export default function DetailsDrinks(props) {
   const [favoriteRecipes, setFavoriteRecipes] = useState([]);
   const [inProgress, setInProgress] = useState([]);
   const [ingredients, setIngredients] = useState([]);
+  const [sharedMessage, setSharedMessage] = useState(false);
 
   useEffect(() => {
     const fetchId = async (itemId) => {
@@ -55,6 +58,18 @@ export default function DetailsDrinks(props) {
       .length < 0 ? null
       : <StartRecipe id={ itemId } type="drinks" />;
   };
+
+  const handleClickShare = () => {
+    const { history: { location: { pathname } } } = props;
+    copy(`http://localhost:3000${pathname}`);
+    setSharedMessage(true);
+  };
+
+  if (sharedMessage === true) {
+    const time = 5000;
+    const HidePopUp = () => setSharedMessage(false);
+    setTimeout(HidePopUp, time);
+  }
 
   const handleClickFavorite = () => {
     if (favoriteRecipes && favoriteRecipes.some((e) => e.id === data.idDrink)) {
@@ -97,7 +112,7 @@ export default function DetailsDrinks(props) {
         <h1 data-testid="recipe-title">{ data.strDrink }</h1>
         <p data-testid="recipe-category">{ data.strAlcoholic }</p>
         <div style={ { position: 'absolute' } }>
-          <button type="button">
+          <button type="button" onClick={ handleClickShare }>
             <img
               src={ shareIcon }
               alt="whiteHeart"
@@ -113,6 +128,25 @@ export default function DetailsDrinks(props) {
             />
           </button>
         </div>
+        { sharedMessage && (
+          <div
+            style={ {
+              display: 'block',
+              textAlign: 'center',
+              backgroundColor: 'lightgoldenrodyellow',
+              position: 'absolute',
+              width: '100%',
+            } }
+          >
+            <p>Link copied!</p>
+            <button
+              type="button"
+              onClick={ () => setSharedMessage(false) }
+            >
+              Fechar
+            </button>
+          </div>
+        ) }
         <img
           data-testid="recipe-photo"
           src={ data.strDrinkThumb }
@@ -137,5 +171,6 @@ export default function DetailsDrinks(props) {
 }
 
 DetailsDrinks.propTypes = {
+  history: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
 };
