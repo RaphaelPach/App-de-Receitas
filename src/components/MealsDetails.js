@@ -9,7 +9,7 @@ import StartRecipe from './StartRecipe';
 const copy = require('clipboard-copy');
 
 export default function MealsDetails(props) {
-  const { id } = props;
+  const { id, history: { location: { pathname } } } = props;
 
   const [data, setData] = useState([]);
   const [doneRecipes, setDoneRecipes] = useState([]);
@@ -18,6 +18,7 @@ export default function MealsDetails(props) {
   const [inProgress, setInProgress] = useState([]);
   const [ingredients, setIngredients] = useState([]);
   const [videoUrl, setVideoUrl] = useState('');
+  const [sharedMessage, setSharedMessage] = useState(false);
 
   useEffect(() => {
     const fetchId = async (itemId) => {
@@ -44,9 +45,16 @@ export default function MealsDetails(props) {
   }, [data, favoriteRecipes]);
 
   const handleClickShare = () => {
-    copy('This is some cool text');
-    console.log(copy);
+    // const { history: { location: { pathname } } } = props;
+    copy(`http://localhost:3000${pathname}`);
+    setSharedMessage(true);
   };
+
+  if (sharedMessage === true) {
+    const time = 5000;
+    const HidePopUp = () => setSharedMessage(false);
+    setTimeout(HidePopUp, time);
+  }
 
   const handleClickFavorite = () => {
     const recipe = {
@@ -115,6 +123,25 @@ export default function MealsDetails(props) {
             />
           </button>
         </div>
+        { sharedMessage && (
+          <div
+            style={ {
+              display: 'block',
+              textAlign: 'center',
+              backgroundColor: 'lightgoldenrodyellow',
+              position: 'absolute',
+              width: '100%',
+            } }
+          >
+            <p>Link copied!</p>
+            <button
+              type="button"
+              onClick={ () => setSharedMessage(false) }
+            >
+              Fechar
+            </button>
+          </div>
+        ) }
         <img
           data-testid="recipe-photo"
           src={ data.strMealThumb }
@@ -137,5 +164,6 @@ export default function MealsDetails(props) {
 }
 // Requisito 28 e 29 adiconado
 MealsDetails.propTypes = {
+  history: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
 };

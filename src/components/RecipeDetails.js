@@ -8,10 +8,10 @@ export default function RecipeDetails(props) {
   return (
     <>
       {
-        type === 'meal' && <MealsDetails id={ id } />
+        type === 'meal' && <MealsDetails id={ id } { ...props } />
       }
       {
-        type === 'drink' && <DrinksDetails id={ id } />
+        type === 'drink' && <DrinksDetails id={ id } { ...props } />
       }
     </>
   );
