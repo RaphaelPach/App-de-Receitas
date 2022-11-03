@@ -39,7 +39,7 @@ function Carousel(props) {
   };
 
   const recomendationItemCard = ({ id, name, img, index, visible }) => (
-    <Link className={ visible && 'hidden' } key={ id } to={ `/meals/${id}` }>
+    <Link className={ visible && 'hidden' } key={ id } to={ `/${type}/${id}` }>
       <div>
         <h6 data-testid={ `${index}-recommendation-title` }>{ name }</h6>
         <img

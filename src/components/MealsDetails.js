@@ -3,11 +3,15 @@ import PropTypes from 'prop-types';
 import Carousel from './Carousel';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import shareIcon from '../images/shareIcon.svg';
+import StartRecipe from './StartRecipe';
+
 
 export default function MealsDetails(props) {
-  const { match: { params: { id } } } = props;
+  const { id } = props;
 
   const [data, setData] = useState([]);
+  const [doneRecipes, setDoneRecipes] = useState([]);
+  const [inProgress, setInProgress] = useState([]);
   const [ingredients, setIngredients] = useState([]);
   const [videoUrl, setVideoUrl] = useState('');
 
@@ -24,6 +28,8 @@ export default function MealsDetails(props) {
       setVideoUrl(embedVideo);
     };
 
+    setDoneRecipes(JSON.parse(localStorage.getItem('doneRecipes')));
+    setInProgress(JSON.parse(localStorage.getItem('inProgressRecipes')));
     fetchId(id);
   }, [id]);
 
@@ -32,8 +38,26 @@ export default function MealsDetails(props) {
   const handleClick = () => {
     copy('This is some cool text');
     console.log(copy);
-
+  };
+  
   const handleClick2 = () => console.log('click2');
+
+  const recipeButton = (name, itemId) => {
+    if (inProgress && inProgress.meals) {
+      const result = Object.keys(inProgress.meals).some((e) => e === itemId);
+
+      if (result) {
+        return doneRecipes?.filter((e) => e.name === name)
+          .length < 0 ? null
+          : <StartRecipe inProgress />;
+      }
+    }
+
+    return doneRecipes?.filter((e) => e.name === name)
+      .length < 0 ? null
+      : <StartRecipe />;
+  };
+
 
   return (
     <>
@@ -73,10 +97,15 @@ export default function MealsDetails(props) {
         }
         <iframe data-testid="video" src={ videoUrl } title="Recipe Video" />
       </div>
+
+      {
+        recipeButton(data.strMeal, data.idMeal)
+      }
+
     </>
   );
 }
-
+// Requisito 28 e 29 adiconado
 MealsDetails.propTypes = {
-  match: PropTypes.shape().isRequired,
+  id: PropTypes.string.isRequired,
 };
