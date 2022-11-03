@@ -37,13 +37,13 @@ export default function DetailsDrinks(props) {
       if (result) {
         return doneRecipes?.filter((e) => e.name === name)
           .length < 0 ? null
-          : <StartRecipe inProgress />;
+          : <StartRecipe inProgress id={ itemId } type="drinks" />;
       }
     }
 
     return doneRecipes?.filter((e) => e.name === name)
       .length < 0 ? null
-      : <StartRecipe />;
+      : <StartRecipe id={ itemId } type="drinks" />;
   };
 
   const handleClickFavorite = () => {
