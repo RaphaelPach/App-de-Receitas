@@ -24,9 +24,10 @@ export default function StartRecipe(props) {
 StartRecipe.propTypes = {
   inProgress: PropTypes.bool,
   type: PropTypes.string.isRequired,
-  id: PropTypes.string.isRequired,
+  id: PropTypes.string,
 };
 
 StartRecipe.defaultProps = {
   inProgress: false,
+  id: '0',
 };

@@ -19,6 +19,10 @@ export default function RecipeDetails(props) {
 
 RecipeDetails.propTypes = {
   match: PropTypes.shape().isRequired,
-  id: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
+  id: PropTypes.string,
+};
+
+RecipeDetails.defaultProps = {
+  id: '0',
 };
