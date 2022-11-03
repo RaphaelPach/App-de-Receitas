@@ -72,6 +72,16 @@ export default function DetailsDrinks(props) {
   }
 
   const handleClickFavorite = () => {
+    if (favoriteRecipes && favoriteRecipes.some((e) => e.id === data.idDrink)) {
+      const newFavorites = favoriteRecipes.filter((e) => e.id !== data.idDrink);
+
+      localStorage.setItem('favoriteRecipes', JSON.stringify(newFavorites));
+      setFavoriteRecipes(newFavorites);
+      setIsFavorite(false);
+
+      return null;
+    }
+
     const recipe = {
       id: data.idDrink,
       type: 'drink',
@@ -81,10 +91,6 @@ export default function DetailsDrinks(props) {
       name: data.strDrink,
       image: data.strDrinkThumb,
     };
-
-    if (favoriteRecipes && favoriteRecipes.some((e) => e.id === data.idDrink)) {
-      return null;
-    }
 
     if (favoriteRecipes) {
       const atualFavorites = [...favoriteRecipes, recipe];
