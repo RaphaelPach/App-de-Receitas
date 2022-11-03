@@ -3,48 +3,39 @@ import { screen, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from '../App';
 import renderWithRouter from './services/renderWithRouter';
+import meals from '../../cypress/mocks/meals';
 
-describe('Testando App de Receitas', () => {
-  it('Testando Funcionamento da tela de login', async () => {
-    /* const { history } =  */renderWithRouter(<App />);
-    const textBox = screen.getByTestId('email-input');
-    const password = screen.getByTestId('password-input');
-    const btn = screen.getByRole('button', { name: /entrar/i });
-    userEvent.type(textBox, 'teste@teste.com');
-    userEvent.type(password, '123456');
-    expect(textBox).toBeInTheDocument();
-    expect(password).toBeInTheDocument();
-    userEvent.click(btn);
-    /* await waitFor(() => expect(history.location.pathname).toBe('/meals'), { timeout: 3000 }); */
-  });
-});
+// import renderWithContext from './services/renderWithRouter';
 
-const searchInputConst = 'search-input';
-const iconBtn = 'search-top-btn';
+afterEach(() => jest.clearAllMocks());
 
-describe('Testando Header', () => {
-  it('Testando Funcionamento da tela de header', () => {
-    const { history } = renderWithRouter(<App />);
-    act(() => {
-      history.push('/meals');
-    });
-    const searchIcon = screen.getByTestId(iconBtn);
-    userEvent.click(searchIcon);
-    const textMeals = screen.getByRole('heading', { name: /meals/i });
-    const searchBtn = screen.getByTestId(searchInputConst);
-    const profileBtn = screen.getByTestId('profile-top-btn');
+const ICON_SEARCH_BTN = 'search-top-btn';
+const FIRST_LETTER_RADIO = 'first-letter-search-radio';
+const SEARCH_BTN = 'exec-search-btn';
+const SEARCH_INPUT = 'search-input';
 
-    expect(textMeals).toBeInTheDocument();
-    expect(profileBtn).toBeInTheDocument();
-    expect(searchBtn).toBeInTheDocument();
+describe('Implementa testes na tela de Busca', () => {
+  test('Testa elementos na tela', async () => {
+    global.fetch = jest.fn(() => Promise.resolve({
+      json: () => Promise.resolve(meals),
+    }));
 
+    const { history } = renderWithRouter(<App />, ['/meals']);
+    // act(() => {
+    // history.push('/meals');
+    // });
+    expect(history.location.pathname).toBe('/meals');
+    const iconSearchBtn = screen.getByTestId(ICON_SEARCH_BTN);
+    userEvent.click(iconSearchBtn);
+    const firstLetterRadio = screen.getByTestId(FIRST_LETTER_RADIO);
+    userEvent.click(firstLetterRadio);
+    const searchInput = screen.getByTestId('search-input');
+    userEvent.type(searchInput, 'p');
+    const searchBtn = screen.getByTestId();
     userEvent.click(searchBtn);
 
-    const searchInput = screen.getByTestId(searchInputConst);
-    expect(searchInput).toBeInTheDocument();
+    expect(global.fetch).toHaveBeenCalledWith('https://www.themealdb.com/api/json/v1/1/search.php?f=p');
   });
-});
-describe('Testando SearchBar', () => {
   it('Testando Funcionamento do SearchBar', () => {
     act(() => {
       renderWithRouter(<App />);
@@ -55,11 +46,11 @@ describe('Testando SearchBar', () => {
 
     /*  abriu searchBar */
 
-    const searchInput = screen.getByTestId(searchInputConst);
-    const searchBtn = screen.getByTestId('exec-search-btn');
+    const searchInput = screen.getByTestId(SEARCH_INPUT);
+    const searchBtn = screen.getByTestId(SEARCH_BTN);
     const ingredientFilter = screen.getByTestId('ingredient-search-radio');
     const nameFilter = screen.getByTestId('name-search-radio');
-    const firstLetterFilter = screen.getByTestId('first-letter-search-radio');
+    const firstLetterFilter = screen.getByTestId(FIRST_LETTER_RADIO);
 
     expect(searchInput).toBeInTheDocument();
     expect(searchBtn).toBeInTheDocument();
@@ -85,7 +76,7 @@ describe('Testando SearchBar', () => {
     });
     const searchIcon = screen.getByTestId(iconBtn);
     userEvent.click(searchIcon);
-    const searchInp = screen.getByTestId('search-input');
+    const searchInp = screen.getByTestId(SEARCH_INPUT);
     const searchBtn = screen.getByTestId('exec-search-btn');
     const ingredientFilter = screen.getByTestId('ingredient-search-radio');
     const nameFilter = screen.getByTestId('name-search-radio');
@@ -110,10 +101,10 @@ describe('Testando SearchBar', () => {
     // const firstLetterFilter = screen.getByTestId('first-letter-search-radio');
     const searchIcon = screen.getByTestId(iconBtn);
     userEvent.click(searchIcon);
-    const searchInput = screen.getByTestId(searchInputConst);
+    const searchInput = screen.getByTestId(SEARCH_INPUT);
 
     expect(searchInput).toBeInTheDocument();
     userEvent.click(searchIcon);
-    expect(screen.queryByTestId(searchInputConst)).toBeNull();
+    expect(screen.queryByTestId(SEARCH_INPUT)).toBeNull();
   });
 });

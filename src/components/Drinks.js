@@ -1,8 +1,10 @@
 import React, { useContext, useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import AppContext from '../context/AppContext';
 import Header from './Header';
 import ItemCard from './ItemCard';
 import Footer from './Footer';
+import CategoriesFilter from './Recipes';
 
 export default function Drinks(props) {
   const [getDrink, setGetDrink] = useState([]);
@@ -12,12 +14,15 @@ export default function Drinks(props) {
 
   const renderDrinkCards = (data) => data
     .filter((_, i) => i < MAX_ITENS)
-    .map((e, index) => (<ItemCard
-      key={ e.idDrink }
-      index={ index }
-      name={ e.strDrink }
-      img={ e.strDrinkThumb }
-    />));
+    .map((e, index) => (
+      <Link key={ e.idDrink } to={ `/drinks/${e.idDrink}` }>
+        <ItemCard
+          index={ index }
+          name={ e.strDrink }
+          img={ e.strDrinkThumb }
+        />
+      </Link>
+    ));
 
   useEffect(() => {
     const getDrinkList = async () => {
@@ -33,8 +38,9 @@ export default function Drinks(props) {
   return (
     <div>
       <Header { ...props } title="Drinks" profile search />
+      <CategoriesFilter drinks />
       {
-        drinkList.length > 0 ? renderDrinkCards(drinkList) : getDrink
+        drinkList?.length > 0 ? renderDrinkCards(drinkList) : getDrink
       }
       <Footer />
     </div>

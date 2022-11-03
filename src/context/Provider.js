@@ -25,12 +25,19 @@ function Provider({ children }) {
     setPassWord(target.value);
     /*  verifyBtn(); */
   }, []);
+
+  const getFoods = async () => {
+    const responseName = await fetch('https://www.themealdb.com/api/json/v1/1/search.php?s=');
+    const { meals } = await responseName.json();
+
+    setFoodList(meals);
+  };
+
   const getFoodByIngredient = async (ingrediente) => {
     const response = await fetch(
       `https://www.themealdb.com/api/json/v1/1/filter.php?i=${ingrediente}`,
     );
     const { meals } = await response.json();
-    console.log('log', meals);
 
     setFoodList(meals);
     return meals;
@@ -41,7 +48,6 @@ function Provider({ children }) {
       `https://www.themealdb.com/api/json/v1/1/search.php?s=${nome}`,
     );
     const { meals } = await responseName.json();
-    console.log('log', meals);
 
     setFoodList(meals);
     return meals;
@@ -57,7 +63,27 @@ function Provider({ children }) {
     setFoodList(meals);
     return meals;
   };
-  const getDrinks = async (ingrediente) => {
+
+  const getFoodByCategory = async (category) => {
+    const response = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${category}`);
+    const { meals } = await response.json();
+
+    setFoodList(meals);
+  };
+
+  const getDrinks = async () => {
+    const responseName = await fetch('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=');
+    const { drinks } = await responseName.json();
+    setDrinkList(drinks);
+  };
+
+  const getDrinkByCategory = async (category) => {
+    const response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=${category}`);
+    const { drinks } = await response.json();
+    setDrinkList(drinks);
+  };
+
+  const getDrinkByIngredient = async (ingrediente) => {
     const responseDrink = await fetch(
       `https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${ingrediente}`,
     );
@@ -109,12 +135,17 @@ function Provider({ children }) {
       setFoodList,
       drinkList,
       setDrinkList,
+      getFoods,
+      getDrinks,
       getFoodByIngredient,
       getFoodByName,
       getFoodByFirstLetter,
-      getDrinks,
+      getDrinkByIngredient,
       getDrinksByName,
       getDrinksByFirstLetter,
+      getDrinkByCategory,
+      getFoodByCategory,
+
     }),
     [
       email,
