@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Carousel from './Carousel';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
+import blackHeartIcon from '../images/blackHeartIcon.svg';
 import shareIcon from '../images/shareIcon.svg';
 import StartRecipe from './StartRecipe';
 
@@ -12,6 +13,7 @@ export default function MealsDetails(props) {
 
   const [data, setData] = useState([]);
   const [doneRecipes, setDoneRecipes] = useState([]);
+  const [isFavorite, setIsFavorite] = useState(false);
   const [favoriteRecipes, setFavoriteRecipes] = useState([]);
   const [inProgress, setInProgress] = useState([]);
   const [ingredients, setIngredients] = useState([]);
@@ -34,6 +36,12 @@ export default function MealsDetails(props) {
     setInProgress(JSON.parse(localStorage.getItem('inProgressRecipes')));
     fetchId(id);
   }, [id]);
+
+  useEffect(() => {
+    if (favoriteRecipes && favoriteRecipes.some((e) => e.id === data.idMeal)) {
+      setIsFavorite(true);
+    }
+  }, [data, favoriteRecipes]);
 
   const handleClickShare = () => {
     copy('This is some cool text');
@@ -60,9 +68,11 @@ export default function MealsDetails(props) {
 
       localStorage.setItem('favoriteRecipes', JSON.stringify(atualFavorites));
       setFavoriteRecipes(atualFavorites);
+      setIsFavorite(true);
     } else {
       localStorage.setItem('favoriteRecipes', JSON.stringify([recipe]));
       setFavoriteRecipes([recipe]);
+      setIsFavorite(true);
     }
   };
 
@@ -99,7 +109,7 @@ export default function MealsDetails(props) {
           </button>
           <button type="button" onClick={ handleClickFavorite }>
             <img
-              src={ whiteHeartIcon }
+              src={ isFavorite ? blackHeartIcon : whiteHeartIcon }
               alt="whiteHeart"
               data-testid="favorite-btn"
             />
