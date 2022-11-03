@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Carousel from './Carousel';
+import whiteHeartIcon from '../images/whiteHeartIcon.svg';
+import shareIcon from '../images/shareIcon.svg';
 
 export default function MealsDetails(props) {
   const { match: { params: { id } } } = props;
@@ -14,7 +16,7 @@ export default function MealsDetails(props) {
       const URL = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${itemId}`;
       const response = await fetch(URL);
       const { meals } = await response.json();
-
+      console.log(meals[0]);
       setData(meals[0]);
       setIngredients(Object.keys(meals[0]).filter((e) => e.includes('strIng')));
 
@@ -25,12 +27,35 @@ export default function MealsDetails(props) {
     fetchId(id);
   }, [id]);
 
+  const copy = required('clipboard-copy');
+
+  const handleClick = () => {
+    copy('This is some cool text');
+    console.log(copy);
+
+  const handleClick2 = () => console.log('click2');
+
   return (
     <>
       <Carousel show={ 2 } type="drinks" />
       <div>
         <h1 data-testid="recipe-title">{ data.strMeal }</h1>
         <p data-testid="recipe-category">{ data.strCategory }</p>
+        <div style={ { display: 'flex', position: 'absolute' } }>
+          <img
+            onClick={ () => handleClick() }
+            src={ shareIcon }
+            alt="whiteHeart"
+            data-testid="share-btn"
+            style={ { marginRight: '4px' } }
+          />
+          <img
+            onClick={ () => handleClick2() }
+            src={ whiteHeartIcon }
+            alt="whiteHeart"
+            data-testid="favorite-btn"
+          />
+        </div>
         <img
           data-testid="recipe-photo"
           src={ data.strMealThumb }
