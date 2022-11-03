@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Carousel from './Carousel';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
@@ -11,6 +10,7 @@ export default function DetailsDrinks(props) {
 
   const [data, setData] = useState([]);
   const [doneRecipes, setDoneRecipes] = useState([]);
+  const [favoriteRecipes, setFavoriteRecipes] = useState([]);
   const [inProgress, setInProgress] = useState([]);
   const [ingredients, setIngredients] = useState([]);
 
@@ -24,6 +24,7 @@ export default function DetailsDrinks(props) {
       setIngredients(Object.keys(drinks[0]).filter((e) => e.includes('strIng')));
     };
 
+    setFavoriteRecipes(JSON.parse(localStorage.getItem('favoriteRecipes')));
     setDoneRecipes(JSON.parse(localStorage.getItem('doneRecipes')));
     setInProgress(JSON.parse(localStorage.getItem('inProgressRecipes')));
     fetchId(id);
@@ -45,6 +46,32 @@ export default function DetailsDrinks(props) {
       : <StartRecipe />;
   };
 
+  const handleClickFavorite = () => {
+    const recipe = {
+      id: data.idDrink,
+      type: 'drink',
+      nationality: '',
+      category: data.strCategory,
+      alcoholicOrNot: data.strAlcoholic,
+      name: data.strDrink,
+      image: data.strDrinkThumb,
+    };
+
+    if (favoriteRecipes && favoriteRecipes.some((e) => e.id === data.idDrink)) {
+      return null;
+    }
+
+    if (favoriteRecipes) {
+      const atualFavorites = [...favoriteRecipes, recipe];
+
+      localStorage.setItem('favoriteRecipes', JSON.stringify(atualFavorites));
+      setFavoriteRecipes(atualFavorites);
+    } else {
+      localStorage.setItem('favoriteRecipes', JSON.stringify([recipe]));
+      setFavoriteRecipes([recipe]);
+    }
+  };
+
   return (
     <>
       <Carousel show={ 2 } type="meals" />
@@ -52,21 +79,21 @@ export default function DetailsDrinks(props) {
         <h1 data-testid="recipe-title">{ data.strDrink }</h1>
         <p data-testid="recipe-category">{ data.strAlcoholic }</p>
         <div style={ { position: 'absolute' } }>
-          <Link to="/drinks">
+          <button type="button">
             <img
               src={ shareIcon }
               alt="whiteHeart"
               data-testid="share-btn"
               style={ { marginRight: '4px' } }
             />
-          </Link>
-          <Link to="/drinks">
+          </button>
+          <button type="button" onClick={ handleClickFavorite }>
             <img
               src={ whiteHeartIcon }
               alt="whiteHeart"
               data-testid="favorite-btn"
             />
-          </Link>
+          </button>
         </div>
         <img
           data-testid="recipe-photo"

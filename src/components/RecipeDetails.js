@@ -5,7 +5,6 @@ import MealsDetails from './MealsDetails';
 
 export default function RecipeDetails(props) {
   const { type, match: { params: { id } } } = props;
-  console.log(type, id);
   return (
     <>
       {

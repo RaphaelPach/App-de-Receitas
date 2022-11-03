@@ -5,12 +5,14 @@ import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import shareIcon from '../images/shareIcon.svg';
 import StartRecipe from './StartRecipe';
 
+const copy = require('clipboard-copy');
 
 export default function MealsDetails(props) {
   const { id } = props;
 
   const [data, setData] = useState([]);
   const [doneRecipes, setDoneRecipes] = useState([]);
+  const [favoriteRecipes, setFavoriteRecipes] = useState([]);
   const [inProgress, setInProgress] = useState([]);
   const [ingredients, setIngredients] = useState([]);
   const [videoUrl, setVideoUrl] = useState('');
@@ -20,7 +22,6 @@ export default function MealsDetails(props) {
       const URL = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${itemId}`;
       const response = await fetch(URL);
       const { meals } = await response.json();
-      console.log(meals[0]);
       setData(meals[0]);
       setIngredients(Object.keys(meals[0]).filter((e) => e.includes('strIng')));
 
@@ -28,57 +29,81 @@ export default function MealsDetails(props) {
       setVideoUrl(embedVideo);
     };
 
+    setFavoriteRecipes(JSON.parse(localStorage.getItem('favoriteRecipes')));
     setDoneRecipes(JSON.parse(localStorage.getItem('doneRecipes')));
     setInProgress(JSON.parse(localStorage.getItem('inProgressRecipes')));
     fetchId(id);
   }, [id]);
 
-  const copy = required('clipboard-copy');
-
-  const handleClick = () => {
+  const handleClickShare = () => {
     copy('This is some cool text');
     console.log(copy);
   };
-  
-  const handleClick2 = () => console.log('click2');
+
+  const handleClickFavorite = () => {
+    const recipe = {
+      id: data.idMeal,
+      type: 'meal',
+      nationality: data.strArea,
+      category: data.strCategory,
+      alcoholicOrNot: '',
+      name: data.strMeal,
+      image: data.strMealThumb,
+    };
+
+    if (favoriteRecipes && favoriteRecipes.some((e) => e.id === data.idMeal)) {
+      return null;
+    }
+
+    if (favoriteRecipes) {
+      const atualFavorites = [...favoriteRecipes, recipe];
+
+      localStorage.setItem('favoriteRecipes', JSON.stringify(atualFavorites));
+      setFavoriteRecipes(atualFavorites);
+    } else {
+      localStorage.setItem('favoriteRecipes', JSON.stringify([recipe]));
+      setFavoriteRecipes([recipe]);
+    }
+  };
 
   const recipeButton = (name, itemId) => {
     if (inProgress && inProgress.meals) {
       const result = Object.keys(inProgress.meals).some((e) => e === itemId);
 
       if (result) {
-        return doneRecipes?.filter((e) => e.name === name)
-          .length < 0 ? null
-          : <StartRecipe inProgress />;
+        return doneRecipes?.filter((e) => e.name === name).length < 0 ? null : (
+          <StartRecipe inProgress />
+        );
       }
     }
 
-    return doneRecipes?.filter((e) => e.name === name)
-      .length < 0 ? null
-      : <StartRecipe />;
+    return doneRecipes?.filter((e) => e.name === name).length < 0 ? null : (
+      <StartRecipe />
+    );
   };
-
 
   return (
     <>
       <Carousel show={ 2 } type="drinks" />
       <div>
-        <h1 data-testid="recipe-title">{ data.strMeal }</h1>
-        <p data-testid="recipe-category">{ data.strCategory }</p>
+        <h1 data-testid="recipe-title">{data.strMeal}</h1>
+        <p data-testid="recipe-category">{data.strCategory}</p>
         <div style={ { display: 'flex', position: 'absolute' } }>
-          <img
-            onClick={ () => handleClick() }
-            src={ shareIcon }
-            alt="whiteHeart"
-            data-testid="share-btn"
-            style={ { marginRight: '4px' } }
-          />
-          <img
-            onClick={ () => handleClick2() }
-            src={ whiteHeartIcon }
-            alt="whiteHeart"
-            data-testid="favorite-btn"
-          />
+          <button type="button" onClick={ handleClickShare }>
+            <img
+              src={ shareIcon }
+              alt="whiteHeart"
+              data-testid="share-btn"
+              style={ { marginRight: '4px' } }
+            />
+          </button>
+          <button type="button" onClick={ handleClickFavorite }>
+            <img
+              src={ whiteHeartIcon }
+              alt="whiteHeart"
+              data-testid="favorite-btn"
+            />
+          </button>
         </div>
         <img
           data-testid="recipe-photo"
@@ -86,22 +111,17 @@ export default function MealsDetails(props) {
           alt={ data.strMeal }
           style={ { width: '100%' } }
         />
-        <p data-testid="instructions">{ data.strInstructions }</p>
-        {
-          ingredients?.map((e, i) => (
-            <div data-testid={ `${i}-ingredient-name-and-measure` } key={ e }>
-              <p>{data[e]}</p>
-              <p>{ data[`strMeasure${i + 1}`] }</p>
-            </div>
-          ))
-        }
+        <p data-testid="instructions">{data.strInstructions}</p>
+        {ingredients?.map((e, i) => (
+          <div data-testid={ `${i}-ingredient-name-and-measure` } key={ e }>
+            <p>{data[e]}</p>
+            <p>{data[`strMeasure${i + 1}`]}</p>
+          </div>
+        ))}
         <iframe data-testid="video" src={ videoUrl } title="Recipe Video" />
       </div>
 
-      {
-        recipeButton(data.strMeal, data.idMeal)
-      }
-
+      {recipeButton(data.strMeal, data.idMeal)}
     </>
   );
 }
