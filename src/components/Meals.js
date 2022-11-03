@@ -46,6 +46,7 @@ function Recipes(props) {
       }
       <Footer />
     </div>
+
   );
 }
 
