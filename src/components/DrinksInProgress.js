@@ -4,6 +4,7 @@ import Carousel from './Carousel';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
 import shareIcon from '../images/shareIcon.svg';
+import '../css/recipeInProgress.css';
 
 const copy = require('clipboard-copy');
 
@@ -90,6 +91,14 @@ export default function DetailsDrinks(props) {
     }
   };
 
+  const checkIngredient = ({ target }) => {
+    if (target.parentNode.className.includes('finished')) {
+      target.parentNode.className = '';
+    } else {
+      target.parentNode.className = 'finished';
+    }
+  };
+
   return (
     <>
       <Carousel show={ 2 } type="meals" />
@@ -142,15 +151,22 @@ export default function DetailsDrinks(props) {
           style={ { width: '100%' } }
         />
         <p data-testid="instructions">{data.strInstructions}</p>
-        {ingredients?.filter((a) => data[a]?.length > 0).map((e, i) => (
-          <div data-testid={ `${i}-ingredient-name-and-measure` } key={ e }>
-            <label data-testid={ `${i}-ingredient-step` } htmlFor={ data[e] }>
-              <input id={ data[e] } type="checkbox" value={ data[e] } />
-              {data[e]}
-              <p>{data[`strMeasure${i + 1}`]}</p>
-            </label>
-          </div>
-        ))}
+        {ingredients
+          ?.filter((a) => data[a]?.length > 0)
+          .map((e, i) => (
+            <div data-testid={ `${i}-ingredient-name-and-measure` } key={ e }>
+              <label data-testid={ `${i}-ingredient-step` } htmlFor={ data[e] }>
+                <input
+                  id={ data[e] }
+                  type="checkbox"
+                  value={ data[e] }
+                  onClick={ checkIngredient }
+                />
+                {data[e]}
+                <p>{data[`strMeasure${i + 1}`]}</p>
+              </label>
+            </div>
+          ))}
       </div>
       <button data-testid="finish-recipe-btn" type="button">
         Finish recipe
