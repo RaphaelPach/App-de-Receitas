@@ -10,8 +10,7 @@ import Profile from './components/Profile';
 import RecipeDetails from './components/RecipeDetails';
 import FavoriteRecipes from './components/FavoriteRecipes';
 import Footer from './components/Footer';
-import DrinksInProgress from './components/DrinksInProgress';
-import MealsInProgress from './components/MealsInProgress';
+import RecipeInProgress from './components/RecipeInProgress';
 
 function App() {
   return (
@@ -37,8 +36,20 @@ function App() {
             (routeProps) => <RecipeDetails type="drink" { ...routeProps } />
           }
         />
-        <Route exact path="/drinks/:id/in-progress" component={ DrinksInProgress } />
-        <Route exact path="/meals/:id/in-progress" component={ MealsInProgress } />
+        <Route
+          exact
+          path="/drinks/:id/in-progress"
+          render={
+            (routeProps) => <RecipeInProgress type="drinks" { ...routeProps } />
+          }
+        />
+        <Route
+          exact
+          path="/meals/:id/in-progress"
+          render={
+            (routeProps) => <RecipeInProgress type="meals" { ...routeProps } />
+          }
+        />
         <Route exact path="/footer" component={ Footer } />
       </Switch>
     </Provider>
