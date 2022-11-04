@@ -141,11 +141,16 @@ export default function MealsInProgress(props) {
           style={ { width: '100%' } }
         />
         <p data-testid="instructions">{data.strInstructions}</p>
-        {ingredients?.map((e, i) => (
+        {ingredients?.filter((a) => data[a]?.length > 0).map((e, i) => (
+
           <div data-testid={ `${i}-ingredient-name-and-measure` } key={ e }>
-            <p>{data[e]}</p>
-            <p>{data[`strMeasure${i + 1}`]}</p>
+            <label data-testid={ `${i}-ingredient-step` } htmlFor={ data[e] }>
+              <input id={ data[e] } type="checkbox" value={ data[e] } />
+              {data[e]}
+              <p>{data[`strMeasure${i + 1}`]}</p>
+            </label>
           </div>
+
         ))}
         <iframe data-testid="video" src={ videoUrl } title="Recipe Video" />
       </div>
