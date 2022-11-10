@@ -52,5 +52,7 @@ describe('Testando App de Receitas', () => {
     userEvent.click(btnFavorite);
     const textLink = await screen.findByText('Link copied!');
     expect(textLink).toBeInTheDocument();
+    const fechar = await screen.findByTestId('button-fechar');
+    userEvent.click(fechar);
   });
 });

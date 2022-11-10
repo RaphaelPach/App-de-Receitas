@@ -100,6 +100,7 @@ export default function FavoritesRecipes() {
           <p>Link copied!</p>
           <button
             type="button"
+            data-testid="button-fechar"
             onClick={ () => setSharedMessage(false) }
           >
             Fechar
