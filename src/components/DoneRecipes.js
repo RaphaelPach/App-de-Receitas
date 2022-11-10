@@ -45,15 +45,20 @@ export default function DoneRecipes(props) {
         >
           { `Nome: ${e.name}` }
         </p>
-        <p
+        {/* <p
           data-testid={ `${index}-horizontal-top-text` }
         >
           { `Categoria: ${e.category}` }
-        </p>
+        </p> */}
         <p
           data-testid={ `${index}-horizontal-done-date` }
         >
           { `Categoria: ${e.doneDate}` }
+        </p>
+        <p data-testid={ `${index}-horizontal-top-text` }>
+          {
+            e.type === 'meal' ? `${e.nationality} - ${e.category}` : `${e.alcoholicOrNot}`
+          }
         </p>
         {
           e.tags.map((el) => (
