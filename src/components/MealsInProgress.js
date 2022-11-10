@@ -7,7 +7,7 @@ import shareIcon from '../images/shareIcon.svg';
 
 const copy = require('clipboard-copy');
 
-export default function MealsInProgress(props) {
+function MealsInProgress(props) {
   const {
     id,
     history: {
@@ -17,6 +17,7 @@ export default function MealsInProgress(props) {
 
   const [data, setData] = useState([]);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [inProgress, setInProgress] = useState([]);
   const [favoriteRecipes, setFavoriteRecipes] = useState([]);
   const [ingredients, setIngredients] = useState([]);
   const [videoUrl, setVideoUrl] = useState('');
@@ -39,14 +40,35 @@ export default function MealsInProgress(props) {
   }, [id]);
 
   useEffect(() => {
+    const initial = JSON.parse(localStorage.getItem('inProgressRecipes'));
+
+    if (!initial) {
+      const storage = {
+        drinks: {},
+        meals: {},
+      };
+
+      setInProgress(storage);
+      localStorage.setItem('inProgressRecipes', JSON.stringify(storage));
+    } else {
+      setInProgress(initial);
+    }
+  }, []);
+
+  useEffect(() => {
     if (favoriteRecipes && favoriteRecipes.some((e) => e.id === data.idMeal)) {
       setIsFavorite(true);
     }
   }, [data, favoriteRecipes]);
 
+  useEffect(() => {
+    localStorage.setItem('inProgressRecipes', JSON.stringify(inProgress));
+  }, [inProgress]);
+
   const handleClickShare = () => {
     // const { history: { location: { pathname } } } = props;
-    copy(`http://localhost:3000${pathname}`);
+    const path = pathname.replace('/in-progress', '');
+    copy(`http://localhost:3000${path}`);
     setSharedMessage(true);
   };
 
@@ -89,11 +111,45 @@ export default function MealsInProgress(props) {
     }
   };
 
-  const checkIngredient = ({ target }) => {
+  const checkIngredient = ({ target }, e) => {
+    const ingredientNumber = e.replace(/[^0-9]/g, '');
+
+    const obj = JSON.parse(localStorage.getItem('inProgressRecipes'));
+
     if (target.parentNode.className.includes('finished')) {
       target.parentNode.className = '';
+
+      const newObj = {
+        ...obj,
+        meals: {
+          ...obj.meals,
+          [id]: obj.meals[id].filter((item) => item !== Number(ingredientNumber)),
+        },
+      };
+      setInProgress(newObj);
     } else {
       target.parentNode.className = 'finished';
+
+      const alredyInStorage = Object.keys(obj.meals);
+      if (alredyInStorage.some((z) => z === id)) {
+        const newObj = {
+          ...obj,
+          meals: {
+            ...obj.meals,
+            [id]: [...obj.meals[id], Number(ingredientNumber)],
+          },
+        };
+        setInProgress(newObj);
+      } else {
+        const newObj = {
+          ...obj,
+          meals: {
+            ...obj.meals,
+            [id]: [Number(ingredientNumber)],
+          },
+        };
+        setInProgress(newObj);
+      }
     }
   };
 
@@ -153,9 +209,20 @@ export default function MealsInProgress(props) {
           ?.filter((a) => data[a]?.length > 0)
           .map((e, i) => (
             <div data-testid={ `${i}-ingredient-name-and-measure` } key={ e }>
-              <label data-testid={ `${i}-ingredient-step` } htmlFor={ data[e] }>
+              <label
+                className={
+                  inProgress?.meals[id]?.some((a) => `strIngredient${a}` === e)
+                    ? 'finished'
+                    : ''
+                }
+                data-testid={ `${i}-ingredient-step` }
+                htmlFor={ data[e] }
+              >
                 <input
-                  onClick={ checkIngredient }
+                  onClick={ (event) => checkIngredient(event, e) }
+                  defaultChecked={
+                    inProgress?.meals[id]?.some((a) => `strIngredient${a}` === e)
+                  }
                   id={ data[e] }
                   type="checkbox"
                   value={ data[e] }
@@ -174,7 +241,8 @@ export default function MealsInProgress(props) {
     </>
   );
 }
-// Requisito 28 e 29 adiconado
+
+export default MealsInProgress;
 MealsInProgress.propTypes = {
   history: PropTypes.shape().isRequired,
   id: PropTypes.string.isRequired,

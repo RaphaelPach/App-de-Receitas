@@ -13,9 +13,30 @@ export default function DetailsDrinks(props) {
 
   const [data, setData] = useState([]);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [inProgress, setInProgress] = useState([]);
   const [favoriteRecipes, setFavoriteRecipes] = useState([]);
   const [ingredients, setIngredients] = useState([]);
   const [sharedMessage, setSharedMessage] = useState(false);
+
+  useEffect(() => {
+    const initial = JSON.parse(localStorage.getItem('inProgressRecipes'));
+
+    if (!initial) {
+      const storage = {
+        drinks: {},
+        meals: {},
+      };
+
+      setInProgress(storage);
+      localStorage.setItem('inProgressRecipes', JSON.stringify(storage));
+    } else {
+      setInProgress(initial);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('inProgressRecipes', JSON.stringify(inProgress));
+  }, [inProgress]);
 
   useEffect(() => {
     const fetchId = async (itemId) => {
@@ -47,7 +68,8 @@ export default function DetailsDrinks(props) {
         location: { pathname },
       },
     } = props;
-    copy(`http://localhost:3000${pathname}`);
+    const path = pathname.replace('/in-progress', '');
+    copy(`http://localhost:3000${path}`);
     setSharedMessage(true);
   };
 
@@ -91,11 +113,47 @@ export default function DetailsDrinks(props) {
     }
   };
 
-  const checkIngredient = ({ target }) => {
+  const checkIngredient = ({ target }, e) => {
+    const ingredientNumber = e.replace(/[^0-9]/g, '');
+
+    const obj = JSON.parse(localStorage.getItem('inProgressRecipes'));
+
     if (target.parentNode.className.includes('finished')) {
       target.parentNode.className = '';
+
+      const newObj = {
+        ...obj,
+        drinks: {
+          ...obj.drinks,
+          [id]: obj.drinks[id].filter(
+            (item) => item !== Number(ingredientNumber),
+          ),
+        },
+      };
+      setInProgress(newObj);
     } else {
       target.parentNode.className = 'finished';
+
+      const alredyInStorage = Object.keys(obj.drinks);
+      if (alredyInStorage.some((z) => z === id)) {
+        const newObj = {
+          ...obj,
+          drinks: {
+            ...obj.drinks,
+            [id]: [...obj.drinks[id], Number(ingredientNumber)],
+          },
+        };
+        setInProgress(newObj);
+      } else {
+        const newObj = {
+          ...obj,
+          drinks: {
+            ...obj.drinks,
+            [id]: [Number(ingredientNumber)],
+          },
+        };
+        setInProgress(newObj);
+      }
     }
   };
 
@@ -155,12 +213,23 @@ export default function DetailsDrinks(props) {
           ?.filter((a) => data[a]?.length > 0)
           .map((e, i) => (
             <div data-testid={ `${i}-ingredient-name-and-measure` } key={ e }>
-              <label data-testid={ `${i}-ingredient-step` } htmlFor={ data[e] }>
+              <label
+                className={
+                  inProgress?.drinks[id]?.some((a) => `strIngredient${a}` === e)
+                    ? 'finished'
+                    : ''
+                }
+                data-testid={ `${i}-ingredient-step` }
+                htmlFor={ data[e] }
+              >
                 <input
                   id={ data[e] }
                   type="checkbox"
                   value={ data[e] }
-                  onClick={ checkIngredient }
+                  defaultChecked={ inProgress?.drinks[id]?.some(
+                    (a) => `strIngredient${a}` === e,
+                  ) }
+                  onClick={ (event) => checkIngredient(event, e) }
                 />
                 {data[e]}
                 <p>{data[`strMeasure${i + 1}`]}</p>
