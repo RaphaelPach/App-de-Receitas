@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import shareIcon from '../images/shareIcon.svg';
 import Header from './Header';
 
 const copy = require('clipboard-copy');
 
-export default function DoneRecipes(props) {
-  const { history: { location: { pathname } } } = props;
-
+export default function DoneRecipes() {
   const [favoritesItens, setFavoritesItens] = useState([]);
   const [sharedMessage, setSharedMessage] = useState(false);
 
@@ -15,12 +13,20 @@ export default function DoneRecipes(props) {
     setFavoritesItens(JSON.parse(localStorage.getItem('doneRecipes')));
   }, []);
 
-  useEffect(() => {
-    console.log(favoritesItens);
-  }, [favoritesItens]);
+  const filterByType = (filter) => {
+    if (filter === '') {
+      return setFavoritesItens(JSON.parse(localStorage.getItem('doneRecipes')));
+    }
+    const doneRecipies = JSON.parse(localStorage.getItem('doneRecipes'));
+    setFavoritesItens(doneRecipies.filter((e) => e.type === filter));
+  };
 
-  const handleClickShare = () => {
-    copy(`http://localhost:3000${pathname}`);
+  const handleClickShare = (type, id) => {
+    if (type === 'meal') {
+      copy(`http://localhost:3000/meals/${id}`);
+    } else {
+      copy(`http://localhost:3000/drinks/${id}`);
+    }
     setSharedMessage(true);
   };
 
@@ -33,27 +39,32 @@ export default function DoneRecipes(props) {
   const cardsForDoneRecipies = () => favoritesItens
     ?.map((e, index) => (
       <div key={ e.id }>
-        <img
-          data-testid={ `${index}-horizontal-image` }
-          key={ e.id }
-          src={ e.image }
-          alt={ e.name }
-          style={ { width: '100%' } }
-        />
-        <p
-          data-testid={ `${index}-horizontal-name` }
-        >
-          { `Nome: ${e.name}` }
-        </p>
-        <p
-          data-testid={ `${index}-horizontal-top-text` }
-        >
-          { `Categoria: ${e.category}` }
-        </p>
+        <Link to={ e.type === 'meal' ? `/meals/${e.id}` : `/drinks/${e.id}` }>
+          <img
+            data-testid={ `${index}-horizontal-image` }
+            key={ e.id }
+            src={ e.image }
+            alt={ e.name }
+            style={ { width: '100%' } }
+          />
+        </Link>
+        <Link to={ e.type === 'meal' ? `/meals/${e.id}` : `/drinks/${e.id}` }>
+          <p
+            data-testid={ `${index}-horizontal-name` }
+          >
+            { `Nome: ${e.name}` }
+          </p>
+        </Link>
         <p
           data-testid={ `${index}-horizontal-done-date` }
         >
           { `Categoria: ${e.doneDate}` }
+        </p>
+        <p data-testid={ `${index}-horizontal-top-text` }>
+          {
+            e.type === 'meal'
+              ? `${e.nationality} - ${e.category}` : `${e.alcoholicOrNot}`
+          }
         </p>
         {
           e.tags.map((el) => (
@@ -65,7 +76,7 @@ export default function DoneRecipes(props) {
             </p>
           ))
         }
-        <button type="button" onClick={ handleClickShare }>
+        <button type="button" onClick={ () => handleClickShare(e.type, e.id) }>
           <img
             data-testid={ `${index}-horizontal-share-btn` }
             src={ shareIcon }
@@ -98,16 +109,30 @@ export default function DoneRecipes(props) {
         </div>
       ) }
       <Header title="Done Recipes" profile />
-      <button type="button" data-testid="filter-by-all-btn">All</button>
-      <button type="button" data-testid="filter-by-meal-btn">Meals</button>
-      <button type="button" data-testid="filter-by-drink-btn">Drinks</button>
+      <button
+        type="button"
+        data-testid="filter-by-all-btn"
+        onClick={ () => filterByType('') }
+      >
+        All
+      </button>
+      <button
+        type="button"
+        data-testid="filter-by-meal-btn"
+        onClick={ () => filterByType('meal') }
+      >
+        Meals
+      </button>
+      <button
+        type="button"
+        data-testid="filter-by-drink-btn"
+        onClick={ () => filterByType('drink') }
+      >
+        Drinks
+      </button>
       <div>
         { cardsForDoneRecipies() }
       </div>
     </div>
   );
 }
-
-DoneRecipes.propTypes = {
-  history: PropTypes.shape().isRequired,
-};
