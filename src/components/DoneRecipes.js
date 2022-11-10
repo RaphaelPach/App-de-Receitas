@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import shareIcon from '../images/shareIcon.svg';
 import Header from './Header';
 
@@ -38,18 +39,22 @@ export default function DoneRecipes() {
   const cardsForDoneRecipies = () => favoritesItens
     ?.map((e, index) => (
       <div key={ e.id }>
-        <img
-          data-testid={ `${index}-horizontal-image` }
-          key={ e.id }
-          src={ e.image }
-          alt={ e.name }
-          style={ { width: '100%' } }
-        />
-        <p
-          data-testid={ `${index}-horizontal-name` }
-        >
-          { `Nome: ${e.name}` }
-        </p>
+        <Link to={ e.type === 'meal' ? `/meals/${e.id}` : `/drinks/${e.id}` }>
+          <img
+            data-testid={ `${index}-horizontal-image` }
+            key={ e.id }
+            src={ e.image }
+            alt={ e.name }
+            style={ { width: '100%' } }
+          />
+        </Link>
+        <Link to={ e.type === 'meal' ? `/meals/${e.id}` : `/drinks/${e.id}` }>
+          <p
+            data-testid={ `${index}-horizontal-name` }
+          >
+            { `Nome: ${e.name}` }
+          </p>
+        </Link>
         <p
           data-testid={ `${index}-horizontal-done-date` }
         >
@@ -57,7 +62,8 @@ export default function DoneRecipes() {
         </p>
         <p data-testid={ `${index}-horizontal-top-text` }>
           {
-            e.type === 'meal' ? `${e.nationality} - ${e.category}` : `${e.alcoholicOrNot}`
+            e.type === 'meal'
+              ? `${e.nationality} - ${e.category}` : `${e.alcoholicOrNot}`
           }
         </p>
         {
