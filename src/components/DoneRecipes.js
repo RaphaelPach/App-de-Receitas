@@ -12,6 +12,14 @@ export default function DoneRecipes() {
     setFavoritesItens(JSON.parse(localStorage.getItem('doneRecipes')));
   }, []);
 
+  const filterByType = (filter) => {
+    if (filter === '') {
+      return setFavoritesItens(JSON.parse(localStorage.getItem('doneRecipes')));
+    }
+    const doneRecipies = JSON.parse(localStorage.getItem('doneRecipes'));
+    setFavoritesItens(doneRecipies.filter((e) => e.type === filter));
+  };
+
   const handleClickShare = (type, id) => {
     if (type === 'meal') {
       copy(`http://localhost:3000/meals/${id}`);
@@ -95,9 +103,27 @@ export default function DoneRecipes() {
         </div>
       ) }
       <Header title="Done Recipes" profile />
-      <button type="button" data-testid="filter-by-all-btn">All</button>
-      <button type="button" data-testid="filter-by-meal-btn">Meals</button>
-      <button type="button" data-testid="filter-by-drink-btn">Drinks</button>
+      <button
+        type="button"
+        data-testid="filter-by-all-btn"
+        onClick={ () => filterByType('') }
+      >
+        All
+      </button>
+      <button
+        type="button"
+        data-testid="filter-by-meal-btn"
+        onClick={ () => filterByType('meal') }
+      >
+        Meals
+      </button>
+      <button
+        type="button"
+        data-testid="filter-by-drink-btn"
+        onClick={ () => filterByType('drink') }
+      >
+        Drinks
+      </button>
       <div>
         { cardsForDoneRecipies() }
       </div>
