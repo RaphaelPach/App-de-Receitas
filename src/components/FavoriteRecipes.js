@@ -106,7 +106,7 @@ export default function FavoritesRecipes() {
           </button>
         </div>
       ) }
-      <Header title="Done Recipes" profile />
+      <Header title="Favorite Recipes" profile />
       <button
         type="button"
         data-testid="filter-by-all-btn"
