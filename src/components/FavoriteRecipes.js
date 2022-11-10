@@ -97,7 +97,7 @@ export default function FavoritesRecipes() {
             width: '100%',
           } }
         >
-          <p id="link">Link copied!</p>
+          <p>Link copied!</p>
           <button
             type="button"
             onClick={ () => setSharedMessage(false) }
