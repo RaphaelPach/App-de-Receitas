@@ -19,11 +19,9 @@
 
 .carousel-content {
   display: flex;
-  transition: all 250ms linear;
   -ms-overflow-style: none;
-  /* Edge */
   scrollbar-width: none;
-  /* Firefox */
+  transition: all 250ms linear;
 }
 
 /* hide scrollbar in webkit browser */
@@ -33,22 +31,22 @@
 }
 
 .carousel-content > * {
-  width: 100%;
-  flex-shrink: 0;
   flex-grow: 1;
+  flex-shrink: 0;
+  width: 100%;
 }
 
 .left-arrow,
 .right-arrow {
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 24px;
+  height: 48px;
   position: absolute;
-  z-index: 1;
   top: 50%;
   transform: translateY(-50%);
   width: 48px;
-  height: 48px;
-  border-radius: 24px;
-  background-color: white;
-  border: 1px solid #ddd;
+  z-index: 1;
 }
 
 .left-arrow {

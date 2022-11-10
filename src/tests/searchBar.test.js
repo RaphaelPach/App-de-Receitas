@@ -3,23 +3,25 @@ import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from '../App';
 import renderWithRouter from './services/renderWithRouter';
-import meals from '../../cypress/mocks/meals';
-import mealsByIngredient from '../../cypress/mocks/mealsByIngredient';
-import drinks from '../../cypress/mocks/drinks';
-import drinkIngredients from '../../cypress/mocks/drinksByIngredient';
 
+const iconSearch = 'search-top-btn';
+const searchInputBox = 'search-input';
+const ingredientBtnStr = 'ingredient-search-radio';
+const nameRadioStr = 'name-search-radio';
+const firstLetterStr = 'first-letter-search-radio';
+const searchBtnStr = 'exec-search-btn';
 describe('Testando SearchBar', () => {
   afterEach(() => jest.clearAllMocks());
   it('Testando elementos na tela de meals', async () => {
     const { history } = renderWithRouter(<App />, ['/meals']);
     expect(history.location.pathname).toBe('/meals');
-    const iconSearchBtn = screen.getByTestId('search-top-btn');
+    const iconSearchBtn = screen.getByTestId(iconSearch);
     userEvent.click(iconSearchBtn);
-    const searchInput = screen.getByTestId('search-input');
-    const nameRadio = screen.getByTestId('name-search-radio');
-    const ingredientRadio = screen.getByTestId('ingredient-search-radio');
-    const firstLetterRadio = screen.getByTestId('first-letter-search-radio');
-    const searchBtn = screen.getByTestId('exec-search-btn');
+    const searchInput = screen.getByTestId(searchInputBox);
+    const nameRadio = screen.getByTestId(nameRadioStr);
+    const ingredientRadio = screen.getByTestId(ingredientBtnStr);
+    const firstLetterRadio = screen.getByTestId(firstLetterStr);
+    const searchBtn = screen.getByTestId(searchBtnStr);
     expect(searchInput).toBeInTheDocument();
     expect(ingredientRadio).toBeInTheDocument();
     expect(nameRadio).toBeInTheDocument();
@@ -29,81 +31,71 @@ describe('Testando SearchBar', () => {
     expect(searchInput).not.toBeInTheDocument();
     expect(searchBtn).not.toBeInTheDocument();
   });
-  it('testa chamada API para ingrediente de comidas', async () => {
-    global.fetch = jest.fn(() => Promise.resolve({
-      json: () => Promise.resolve(mealsByIngredient),
-    }));
-    const THREE = 3;
-    const { history } = renderWithRouter(<App />, ['/meals']);
-    expect(history.location.pathname).toBe('/meals');
-    const iconSearchBtn = screen.getByTestId('search-top-btn');
+  it('testa api para ingredientes', async () => {
+    // global.fetch = jest.fn(() => Promise.resolve({
+    //   json: () => Promise.resolve(chickenMeals),
+    // }));
+    renderWithRouter(<App />, ['/meals']);
+    const iconSearchBtn = screen.getByTestId(iconSearch);
     userEvent.click(iconSearchBtn);
-    const igredientRadio = screen.getByTestId('ingredient-search-radio');
-    userEvent.click(igredientRadio);
-    const searchInput = screen.getByTestId('search-input');
-    userEvent.type(searchInput, 'chicken');
-    const searchBtn = screen.getByTestId('exec-search-btn');
+    const searchInput = screen.getByTestId(searchInputBox);
+    userEvent.type(searchInput, 'chicken congee');
+    const searchBtn = screen.getByTestId(searchBtnStr);
     userEvent.click(searchBtn);
-    expect(global.fetch).toHaveBeenCalledTimes(THREE);
+    const searchChickens = await screen.findAllByText(/chicken/i);
+    expect(searchChickens.length).toBe(1);
   });
-  it('testa chamada API para nome', async () => {
-    global.fetch = jest.fn(() => Promise.resolve({
-      json: () => Promise.resolve(mealsByIngredient),
-    }));
-    const THREE = 3;
-    const { history } = renderWithRouter(<App />, ['/meals']);
-    expect(history.location.pathname).toBe('/meals');
-    const iconSearchBtn = screen.getByTestId('search-top-btn');
+  it('testa global alert para comidas', async () => {
+    renderWithRouter(<App />, ['/meals']);
+    global.alert = jest.fn().mockReturnValue('xablau');
+    // global.fetch = jest.fn(() => Promise.resolve({
+    //   json: () => Promise.resolve(chickenMeals),
+    // }));
+    const iconSearchBtn = screen.getByTestId(iconSearch);
     userEvent.click(iconSearchBtn);
-    const nameRadio = screen.getByTestId('name-search-radio');
-    userEvent.click(nameRadio);
-    const searchInput = screen.getByTestId('search-input');
-    userEvent.type(searchInput, 'chicken');
-    const searchBtn = screen.getByTestId('exec-search-btn');
-    userEvent.click(searchBtn);
-    expect(global.fetch).toHaveBeenCalledTimes(THREE);
-  });
-  it('testa api primeira letra', async () => {
-    global.fetch = jest.fn(() => Promise.resolve({
-      json: () => Promise.resolve(meals),
-    }));
-    const { history } = renderWithRouter(<App />, ['/meals']);
-    expect(history.location.pathname).toBe('/meals');
-    const iconSearchBtn = screen.getByTestId('search-top-btn');
-    userEvent.click(iconSearchBtn);
-    const firstLetterRadio = screen.getByTestId('first-letter-search-radio');
+    const firstLetterRadio = screen.getByTestId(firstLetterStr);
     userEvent.click(firstLetterRadio);
-    const searchInput = screen.getByTestId('search-input');
-    userEvent.type(searchInput, 'p');
-    const searchBtn = screen.getByTestId('exec-search-btn');
+    const searchInput = screen.getByTestId(searchInputBox);
+    userEvent.type(searchInput, 'ff');
+    const searchBtn = screen.getByTestId(searchBtnStr);
     userEvent.click(searchBtn);
-    expect(global.fetch).toHaveBeenCalledWith('https://www.themealdb.com/api/json/v1/1/search.php?f=p');
+    expect(global.alert()).toBe('xablau');
+  });
+  it('testa global alert para comidas', async () => {
+    renderWithRouter(<App />, ['/drinks']);
+    global.alert = jest.fn().mockReturnValue('xablau');
+    const iconSearchBtn = screen.getByTestId(iconSearch);
+    userEvent.click(iconSearchBtn);
+    const firstLetterRadio = screen.getByTestId(firstLetterStr);
+    userEvent.click(firstLetterRadio);
+    const searchInput = screen.getByTestId(searchInputBox);
+    userEvent.type(searchInput, 'ff');
+    const searchBtn = screen.getByTestId(searchBtnStr);
+    userEvent.click(searchBtn);
+    expect(global.alert()).toBe('xablau');
   });
   it('testa chamada API quando encontra somente uma comida', async () => {
-    global.fetch = jest.fn(() => Promise.resolve({
-      json: () => Promise.resolve(mealsByIngredient),
-    }));
     const { history } = renderWithRouter(<App />, ['/meals']);
-    const iconSearchBtn = screen.getByTestId('search-top-btn');
+    const iconSearchBtn = screen.getByTestId(iconSearch);
     userEvent.click(iconSearchBtn);
-    const nameRadio = screen.getByTestId('name-search-radio');
+    const nameRadio = screen.getByTestId(nameRadioStr);
     userEvent.click(nameRadio);
-    const searchInput = screen.getByTestId('search-input');
-    userEvent.type(searchInput, 'Chicken Congee');
-    const searchBtn = screen.getByTestId('exec-search-btn');
+    const searchInput = screen.getByTestId(searchInputBox);
+    userEvent.type(searchInput, 'corba');
+    const searchBtn = screen.getByTestId(searchBtnStr);
     userEvent.click(searchBtn);
-    waitFor(() => {
-      expect(history.location.pathname).toBe('/meals/52956');
+    await waitFor(() => {
+      expect(history.location.pathname).toBe('/meals/52977');
     });
   });
   it('Testando elementos da tela de Drinks', () => {
     const { history } = renderWithRouter(<App />, ['/drinks']);
     expect(history.location.pathname).toBe('/drinks');
-    const iconSearchBtn = screen.getByTestId('search-top-btn');
+    const iconSearchBtn = screen.getByTestId(iconSearch);
     userEvent.click(iconSearchBtn);
-    const searchInput = screen.getByTestId('search-input');
-    const nameRadio = screen.getByTestId('name-search-radio');
-    const ingredientRadio = screen.getByTestId('ingredient-search-radio');
+    const searchInput = screen.getByTestId(searchInputBox);
+    const nameRadio = screen.getByTestId(nameRadioStr);
+    const ingredientRadio = screen.getByTestId(ingredientBtnStr);
     const firstLetterRadio = screen.getByTestId('first-letter-search-radio');
     expect(searchInput).toBeInTheDocument();
     expect(ingredientRadio).toBeInTheDocument();
@@ -113,34 +105,42 @@ describe('Testando SearchBar', () => {
     expect(searchInput).not.toBeInTheDocument();
   });
   it('testa chamada API para ingrediente de bebidas', async () => {
-    global.fetch = jest.fn(() => Promise.resolve({
-      json: () => Promise.resolve(drinks),
-    }));
     const { history } = renderWithRouter(<App />, ['/drinks']);
     expect(history.location.pathname).toBe('/drinks');
-    const iconSearchBtn = screen.getByTestId('search-top-btn');
+    const iconSearchBtn = screen.getByTestId(iconSearch);
     userEvent.click(iconSearchBtn);
-    const igredientRadio = screen.getByTestId('ingredient-search-radio');
+    const igredientRadio = screen.getByTestId(ingredientBtnStr);
     userEvent.click(igredientRadio);
-    const searchInput = screen.getByTestId('search-input');
-    userEvent.type(searchInput, 'mint');
-    const searchBtn = screen.getByTestId('exec-search-btn');
+    const searchInput = screen.getByTestId(searchInputBox);
+    userEvent.type(searchInput, 'rum');
+    const searchBtn = screen.getByTestId(searchBtnStr);
     userEvent.click(searchBtn);
-    expect(global.fetch).toHaveBeenCalled();
+    const searchRum = await screen.findAllByText(/rum/i);
+    expect(searchRum.length).toBe(1);
   });
   it('testa chamada API para nome em drinks', async () => {
-    global.fetch = jest.fn(() => Promise.resolve({
-      json: () => Promise.resolve(drinkIngredients),
-    }));
     renderWithRouter(<App />, ['/drinks']);
-    const iconSearchBtn = screen.getByTestId('search-top-btn');
+    const iconSearchBtn = screen.getByTestId(iconSearch);
     userEvent.click(iconSearchBtn);
-    const ingredientRadio = screen.getByTestId('name-search-radio');
+    const ingredientRadio = screen.getByTestId(nameRadioStr);
     userEvent.click(ingredientRadio);
-    const searchInput = screen.getByTestId('search-input');
+    const searchInput = screen.getByTestId(searchInputBox);
     userEvent.type(searchInput, 'gin');
-    const searchBtn = screen.getByTestId('exec-search-btn');
+    const searchBtn = screen.getByTestId(searchBtnStr);
     userEvent.click(searchBtn);
-    expect(global.fetch).toHaveBeenCalled();
+  });
+  it('testa chamada API quando encontra somente uma comida', async () => {
+    const { history } = renderWithRouter(<App />, ['/drinks']);
+    const iconSearchBtn = screen.getByTestId(iconSearch);
+    userEvent.click(iconSearchBtn);
+    const nameRadio = screen.getByTestId(nameRadioStr);
+    userEvent.click(nameRadio);
+    const searchInput = screen.getByTestId(searchInputBox);
+    userEvent.type(searchInput, 'A1');
+    const searchBtn = screen.getByTestId(searchBtnStr);
+    userEvent.click(searchBtn);
+    await waitFor(() => {
+      expect(history.location.pathname).toBe('/drinks/17222');
+    });
   });
 });
