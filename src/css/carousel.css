@@ -19,50 +19,13 @@
 
 .carousel-content {
   display: flex;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
   transition: all 250ms linear;
-}
-
-/* hide scrollbar in webkit browser */
-.carousel-content::-webkit-scrollbar,
-.carousel-content::-webkit-scrollbar {
-  display: none;
 }
 
 .carousel-content > * {
   flex-grow: 1;
   flex-shrink: 0;
   width: 100%;
-}
-
-.left-arrow,
-.right-arrow {
-  background-color: white;
-  border: 1px solid #ddd;
-  border-radius: 24px;
-  height: 48px;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 48px;
-  z-index: 1;
-}
-
-.left-arrow {
-  left: 24px;
-}
-
-.right-arrow {
-  right: 24px;
-}
-
-@media ( hover : none ) and ( pointer : coarse ) {
-
-  .left-arrow,
-  .right-arrow {
-    display: none;
-  }
 }
 
 .carousel-content.show-1 > * {
