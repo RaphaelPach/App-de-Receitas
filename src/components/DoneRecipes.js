@@ -14,7 +14,7 @@ export default function DoneRecipes() {
 
   const handleClickShare = (type, id) => {
     if (type === 'meal') {
-      copy(`http://localhost:3000/meals/${id}`)
+      copy(`http://localhost:3000/meals/${id}`);
     } else {
       copy(`http://localhost:3000/drinks/${id}`);
     }
