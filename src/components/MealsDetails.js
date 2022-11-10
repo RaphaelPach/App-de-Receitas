@@ -2,20 +2,23 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Carousel from './Carousel';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
+import blackHeartIcon from '../images/blackHeartIcon.svg';
 import shareIcon from '../images/shareIcon.svg';
 import StartRecipe from './StartRecipe';
 
 const copy = require('clipboard-copy');
 
 export default function MealsDetails(props) {
-  const { id } = props;
+  const { id, history: { location: { pathname } } } = props;
 
   const [data, setData] = useState([]);
   const [doneRecipes, setDoneRecipes] = useState([]);
+  const [isFavorite, setIsFavorite] = useState(false);
   const [favoriteRecipes, setFavoriteRecipes] = useState([]);
   const [inProgress, setInProgress] = useState([]);
   const [ingredients, setIngredients] = useState([]);
   const [videoUrl, setVideoUrl] = useState('');
+  const [sharedMessage, setSharedMessage] = useState(false);
 
   useEffect(() => {
     const fetchId = async (itemId) => {
@@ -35,12 +38,34 @@ export default function MealsDetails(props) {
     fetchId(id);
   }, [id]);
 
+  useEffect(() => {
+    if (favoriteRecipes && favoriteRecipes.some((e) => e.id === data.idMeal)) {
+      setIsFavorite(true);
+    }
+  }, [data, favoriteRecipes]);
+
   const handleClickShare = () => {
-    copy('This is some cool text');
-    console.log(copy);
+    // const { history: { location: { pathname } } } = props;
+    copy(`http://localhost:3000${pathname}`);
+    setSharedMessage(true);
   };
 
+  if (sharedMessage === true) {
+    const time = 5000;
+    const HidePopUp = () => setSharedMessage(false);
+    setTimeout(HidePopUp, time);
+  }
+
   const handleClickFavorite = () => {
+    if (favoriteRecipes && favoriteRecipes.some((e) => e.id === data.idMeal)) {
+      const newFavorites = favoriteRecipes.filter((e) => e.id !== data.idMeal);
+
+      localStorage.setItem('favoriteRecipes', JSON.stringify(newFavorites));
+      setFavoriteRecipes(newFavorites);
+      setIsFavorite(false);
+      return null;
+    }
+
     const recipe = {
       id: data.idMeal,
       type: 'meal',
@@ -51,18 +76,16 @@ export default function MealsDetails(props) {
       image: data.strMealThumb,
     };
 
-    if (favoriteRecipes && favoriteRecipes.some((e) => e.id === data.idMeal)) {
-      return null;
-    }
-
     if (favoriteRecipes) {
       const atualFavorites = [...favoriteRecipes, recipe];
 
       localStorage.setItem('favoriteRecipes', JSON.stringify(atualFavorites));
       setFavoriteRecipes(atualFavorites);
+      setIsFavorite(true);
     } else {
       localStorage.setItem('favoriteRecipes', JSON.stringify([recipe]));
       setFavoriteRecipes([recipe]);
+      setIsFavorite(true);
     }
   };
 
@@ -72,13 +95,13 @@ export default function MealsDetails(props) {
 
       if (result) {
         return doneRecipes?.filter((e) => e.name === name).length < 0 ? null : (
-          <StartRecipe inProgress />
+          <StartRecipe inProgress id={ itemId } type="meals" />
         );
       }
     }
 
     return doneRecipes?.filter((e) => e.name === name).length < 0 ? null : (
-      <StartRecipe />
+      <StartRecipe id={ itemId } type="meals" />
     );
   };
 
@@ -99,12 +122,31 @@ export default function MealsDetails(props) {
           </button>
           <button type="button" onClick={ handleClickFavorite }>
             <img
-              src={ whiteHeartIcon }
+              src={ isFavorite ? blackHeartIcon : whiteHeartIcon }
               alt="whiteHeart"
               data-testid="favorite-btn"
             />
           </button>
         </div>
+        { sharedMessage && (
+          <div
+            style={ {
+              display: 'block',
+              textAlign: 'center',
+              backgroundColor: 'lightgoldenrodyellow',
+              position: 'absolute',
+              width: '100%',
+            } }
+          >
+            <p>Link copied!</p>
+            <button
+              type="button"
+              onClick={ () => setSharedMessage(false) }
+            >
+              Fechar
+            </button>
+          </div>
+        ) }
         <img
           data-testid="recipe-photo"
           src={ data.strMealThumb }
@@ -127,5 +169,6 @@ export default function MealsDetails(props) {
 }
 // Requisito 28 e 29 adiconado
 MealsDetails.propTypes = {
+  history: PropTypes.shape().isRequired,
   id: PropTypes.string.isRequired,
 };
